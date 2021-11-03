@@ -30,6 +30,5 @@ public class MainFrame extends JFrame {
     // Main
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
-        // Model model = new Model();
     }
 }
