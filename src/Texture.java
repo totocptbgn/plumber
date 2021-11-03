@@ -36,7 +36,7 @@ public class Texture {
             case BLACK -> line = 5;
         }
         switch (t) {
-            case INPUT -> column = 0;
+            case SOURCE -> column = 0;
             case LINE -> column = 1;
             case OVER -> column = 2;
             case TURN -> column = 3;
@@ -100,7 +100,7 @@ enum Color {
 
 // Type des tuyaux.
 enum PipeType {
-    INPUT, LINE, OVER, TURN, FORK, CROSS
+    SOURCE, LINE, OVER, TURN, FORK, CROSS
 }
 
 // Autres textures de la dernière ligne.
