@@ -7,9 +7,6 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    static public int WIDTH = 840;
-    static public int HEIGHT = 720;
-
     private DrawPanel pnl;
 
     // Construction du Frame et du Panel
