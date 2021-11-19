@@ -10,8 +10,7 @@ public class Texture {
 	// Renvoie l'image des textures `pipes.gif` en entier.
 	private static BufferedImage getTextureImage() {
 		try {
-			BufferedImage texture = ImageIO.read(new File("src/data/pipes.gif"));
-			return texture;
+			return ImageIO.read(new File("src/data/pipes.gif"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -23,26 +22,34 @@ public class Texture {
 		return getTextureImage().getSubimage(column * 140, line * 140, 120, 120);
 	}
 
+	public static BufferedImage getTextureTile(Color c, PipeType t) {
+		return getTextureTile(c, t, Orientation.NORTH);
+	}
+
+	public static BufferedImage getTextureTile(Special s) {
+		return getTextureTile(s, Orientation.NORTH);
+	}
+
 	public static BufferedImage getTextureTile(Color c, PipeType t, Orientation o) {
 		// On met les lignes et les colonnes en fonction du bloc désiré.
 		int column = -1;
 		int line = -1;
 
 		switch (c) {
-		case WHITE : line = 0;
-		case RED : line = 1;
-		case GREEN : line = 2;
-		case BLUE : line = 3;
-		case YELLOW : line = 4;
-		case BLACK : line = 5;
+			case WHITE : line = 0; break;
+			case RED : line = 1; break;
+			case GREEN : line = 2; break;
+			case BLUE : line = 3; break;
+			case YELLOW : line = 4; break;
+			case BLACK : line = 5; break;
 		}
 		switch (t) {
-		case SOURCE : column = 0;
-		case LINE : column = 1;
-		case OVER : column = 2;
-		case TURN : column = 3;
-		case FORK : column = 4;
-		case CROSS : column = 5;
+			case SOURCE : column = 0; break;
+			case LINE : column = 1; break;
+			case OVER : column = 2; break;
+			case TURN : column = 3; break;
+			case FORK : column = 4; break;
+			case CROSS : column = 5; break;
 		}
 
 		return rotateImage(getTextureTile(column, line), o);
@@ -52,12 +59,12 @@ public class Texture {
 		int column = -1;
 
 		switch (s) {
-		case DARKBROWN : column = 0;
-		case LIGHTBROWN : column = 1;
-		case BLACK : column = 2;
-		case CORNER : column = 3;
-		case BORDER : column = 4;
-		case DOTS : column = 5;
+			case DARKBROWN : column = 0; break;
+			case LIGHTBROWN : column = 1; break;
+			case BLACK : column = 2; break;
+			case CORNER : column = 3; break;
+			case BORDER : column = 4; break;
+			case DOTS : column = 5; break;
 		}
 
 		return rotateImage(getTextureTile(column, 6), o);
@@ -72,18 +79,21 @@ public class Texture {
 		// On fait la rotation de l'image.
 		int angle = 0;
 		switch (o) {
-		case EAST : {
-			angle = 90;
-		}
-		case SOUTH : {
-			angle = 180;
-		}
-		case WEST : {
-			angle = 270;
-		}
+			case EAST : {
+				angle = 90;
+				break;
+			}
+			case SOUTH : {
+				angle = 180;
+				break;
+			}
+			case WEST : {
+				angle = 270;
+				break;
+			}
 		}
 
-		BufferedImage buffer = new BufferedImage(120, 120, BufferedImage.TYPE_INT_RGB);
+		BufferedImage buffer = new BufferedImage(120, 120, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = buffer.createGraphics();
 
 		g.rotate(Math.toRadians(angle), 60, 60);

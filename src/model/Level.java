@@ -32,10 +32,10 @@ public class Level {
 
 	}
 	public int column() {
-		return currentState.length;
+		return currentState.length - 2;
 	}
 
 	public int line() {
-		return currentState[0].length;
+		return currentState[0].length - 2;
 	}
 }
