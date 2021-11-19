@@ -1,9 +1,10 @@
 package application;
-import java.awt.Graphics;
+
+import controller.LevelController;
+import model.Level;
+import view.DrawPanelLevel;
 
 import javax.swing.*;
-
-import view.DrawPanel;
 
 
 /**
@@ -12,21 +13,21 @@ import view.DrawPanel;
 
 public class Application extends JFrame {
 
+	public void setPanel(JPanel panel) {
+		this.getContentPane().add(panel);
+	}
+
 	// Main
 	public static void main(String[] args) {
-		JFrame mainFrame = new JFrame();
+		Application mainFrame = new Application();
 		mainFrame.setTitle("Plumber");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//mainFrame.setPreferredSize(new Dimension(1080,720));
-		
-		// Donner à DrawPanel un "contrôleur" en paramètre?
-		DrawPanel pnl = new DrawPanel();
-		mainFrame.getContentPane().add(pnl);
-		
-		Graphics g = pnl.getGraphics();
-		// Construire le menu ici sur g // Faire un autre panel pour le menu?
 
-		mainFrame.setResizable(false);
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel(new Level(1));
+		mainFrame.setPanel(panelLevel1);
+
+		LevelController controller1 = new LevelController(panelLevel1);
+
 		mainFrame.pack();
 		mainFrame.setVisible(true);
 	}
