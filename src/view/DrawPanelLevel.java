@@ -106,9 +106,9 @@ public class DrawPanelLevel extends JPanel {
 
 		String[][] state = level.getCurrentState();
 
-		// Dessin sources
+		// Dessin des sources
 		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < state.length; j++) {
+			for (int j = 0; j < state[0].length; j++) {
 				view.Color color = null;
 				view.Orientation orientation = null;
 				String s = state[i * (state.length - 1)][j];
@@ -133,11 +133,11 @@ public class DrawPanelLevel extends JPanel {
 			}
 		}
 
-		for (int i = 0; i < state[0].length; i++) {
+		for (int i = 0; i < state.length; i++) {
 			for (int j = 0; j < 2; j++) {
 				view.Color color = null;
 				view.Orientation orientation = null;
-				String s = state[i][j * (state.length - 1)];
+				String s = state[i][j * (state[0].length - 1)];
 
 				switch (s.charAt(0)) {
 					case 'X' : continue;
@@ -152,7 +152,7 @@ public class DrawPanelLevel extends JPanel {
 					case '3' : orientation = Orientation.WEST; break;
 				}
 
-				x = j * (state.length - 1) * 120;
+				x = j * (state[0].length - 1) * 120;
 				y = i * 120;
 				tile = Texture.getTextureTile(color, PipeType.SOURCE, orientation);
 				g.drawImage(tile, x, y, null);

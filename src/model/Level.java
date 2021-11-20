@@ -61,11 +61,11 @@ public class Level {
 	}
 
 	public int column() {
-		return currentState.length - 2;
+		return currentState[0].length - 2;
 	}
 
 	public int line() {
-		return currentState[0].length - 2;
+		return currentState.length - 2;
 	}
 
 	public int[] getRessources() {
