@@ -37,24 +37,22 @@ public class Level {
 		for (int i = 1; i < currentState.length - 1; i++) {
 			for (int j = 1; j < currentState[0].length - 1; j++) {
 				String tile = currentState[i][j];
-				if (!tile.equals(".")) {
-					if (tile.charAt(0) != '*') {
-						switch (tile) {
-							case "C0" : ressources[0]++; break;
-							case "O0" : ressources[1]++; break;
-							case "L0" : ressources[2]++; break;
-							case "L1" : ressources[3]++; break;
-							case "T1" : ressources[4]++; break;
-							case "T2" : ressources[5]++; break;
-							case "T0" : ressources[6]++; break;
-							case "T3" : ressources[7]++; break;
-							case "F0" : ressources[8]++; break;
-							case "F1" : ressources[9]++; break;
-							case "F3" : ressources[10]++; break;
-							case "F2" : ressources[11]++; break;
-						}
-						currentState[i][j] = ".";
+				if (!tile.equals(".") && tile.charAt(0) != '*') {
+					switch (tile) {
+						case "C0" : ressources[0]++; break;
+						case "O0" : ressources[1]++; break;
+						case "L0" : ressources[2]++; break;
+						case "L1" : ressources[3]++; break;
+						case "T1" : ressources[4]++; break;
+						case "T2" : ressources[5]++; break;
+						case "T0" : ressources[6]++; break;
+						case "T3" : ressources[7]++; break;
+						case "F0" : ressources[8]++; break;
+						case "F1" : ressources[9]++; break;
+						case "F3" : ressources[10]++; break;
+						case "F2" : ressources[11]++; break;
 					}
+					currentState[i][j] = ".";
 				}
 			}
 		}

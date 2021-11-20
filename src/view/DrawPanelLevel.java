@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 public class DrawPanelLevel extends JPanel {
 
-	private Level l;
+	private Level level;
 	private BufferedImage background;
 
 	public DrawPanelLevel(Level level) {
@@ -16,7 +16,7 @@ public class DrawPanelLevel extends JPanel {
 		int h = Math.max(level.line() + 2, 6) * 120;
 
 		this.setPreferredSize(new Dimension(w, h));
-		this.l = level;
+		this.level = level;
 
 		// Création de l'image de fond
 		this.background = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -185,6 +185,56 @@ public class DrawPanelLevel extends JPanel {
 	}
 
 	private void foreground(Graphics g) {
+		String[][] state = level.getCurrentState();
+		int [] pipes = level.getRessources();
+
+		// Dessin des ressources
+		int x;
+		int y = 0;
+
+		g.setColor(Color.white);
+		g.setFont(new Font("Monospaced", Font.PLAIN, 15));
+
+		for (int i = 0; i < pipes.length; i++) {
+			if (i % 2 == 0) {
+				x = (state[0].length) * 120;
+			} else {
+				x = (state[0].length + 1) * 120;
+			}
+
+			view.Color c;
+			if (pipes[i] == 0) {
+				c = view.Color.DARKGREY;
+			} else {
+				c = view.Color.WHITE;
+			}
+
+			BufferedImage img = null;
+			switch (i) {
+				case 0: img = Texture.getTextureTile(c, PipeType.CROSS); break;
+				case 1: {
+					img = Texture.getTextureTile(c, PipeType.OVER);
+					g.drawImage(Texture.getTextureTile(c, PipeType.LINE), x, y, null);
+					break;
+				}
+				case 2: img = Texture.getTextureTile(c, PipeType.LINE); break;
+				case 3: img = Texture.getTextureTile(c, PipeType.LINE, Orientation.EAST); break;
+				case 4: img = Texture.getTextureTile(c, PipeType.TURN, Orientation.EAST); break;
+				case 5: img = Texture.getTextureTile(c, PipeType.TURN, Orientation.SOUTH); break;
+				case 6: img = Texture.getTextureTile(c, PipeType.TURN); break;
+				case 7: img = Texture.getTextureTile(c, PipeType.TURN, Orientation.WEST); break;
+				case 8: img = Texture.getTextureTile(c, PipeType.FORK); break;
+				case 9: img = Texture.getTextureTile(c, PipeType.FORK, Orientation.EAST); break;
+				case 10: img = Texture.getTextureTile(c, PipeType.FORK, Orientation.WEST); break;
+				case 11: img = Texture.getTextureTile(c, PipeType.FORK, Orientation.SOUTH); break;
+			}
+			g.drawImage(img, x, y, null);
+			g.drawString(String.valueOf(pipes[i]), x + 10, y + 110);
+
+			if (i % 2 == 1) {
+				y += 120;
+			}
+		}
 
 	}
 

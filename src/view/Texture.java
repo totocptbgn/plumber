@@ -41,7 +41,7 @@ public class Texture {
 			case GREEN : line = 2; break;
 			case BLUE : line = 3; break;
 			case YELLOW : line = 4; break;
-			case BLACK : line = 5; break;
+			case DARKGREY: line = 5; break;
 		}
 		switch (t) {
 			case SOURCE : column = 0; break;
@@ -106,7 +106,7 @@ public class Texture {
 
 // Couleur des tuyaux.
 enum Color {
-	WHITE, RED, GREEN, BLUE, YELLOW, BLACK
+	WHITE, RED, GREEN, BLUE, YELLOW, DARKGREY
 }
 
 // Type des tuyaux.
