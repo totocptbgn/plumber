@@ -172,13 +172,16 @@ public class DrawPanelLevel extends JPanel {
 		}
 	}
 
+	public Level getLevel() {
+		return level;
+	}
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		background(g);
 		foreground(g);
 		pipeMove(g);
 	}
-
 
 	private void background(Graphics g) {
 		g.drawImage(background, 0, 0, null);
@@ -233,6 +236,41 @@ public class DrawPanelLevel extends JPanel {
 
 			if (i % 2 == 1) {
 				y += 120;
+			}
+		}
+
+
+		// Dessin des tuyaux sans couleurs
+		for (int i = 1; i < state.length - 1; i++) {
+			for (int j = 1; j < state[0].length - 1; j++) {
+				if (!state[i][j].equals(".")) {
+					int chr = 0;
+					if (state[i][j].charAt(0) == '*') {
+						chr++;
+					}
+					view.PipeType pipeType = null;
+					view.Orientation orientation = null;
+
+					switch (state[i][j].charAt(chr)) {
+						case 'L' : pipeType = PipeType.LINE; break;
+						case 'O' : {
+							pipeType = PipeType.OVER;
+							g.drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), j * 120, i * 120, null);
+							break;
+						}
+						case 'T' : pipeType = PipeType.TURN; break;
+						case 'F' : pipeType = PipeType.FORK; break;
+						case 'C' : pipeType = PipeType.CROSS; break;
+					}
+
+					switch (state[i][j].charAt(chr + 1)) {
+						case '0' : orientation = Orientation.NORTH; break;
+						case '1' : orientation = Orientation.EAST; break;
+						case '2' : orientation = Orientation.SOUTH; break;
+						case '3' : orientation = Orientation.WEST; break;
+					}
+					g.drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), j * 120, i * 120, null);
+				}
 			}
 		}
 
