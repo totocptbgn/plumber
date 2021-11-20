@@ -1,19 +1,26 @@
 package controller;
 
 import model.Level;
-import view.DrawPanelLevel;
+import view.*;
+import view.Color;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 
 public class LevelController {
 
     private Level level;
 
+    BufferedImage dragImg;
+    int [] dragOffset;
+
     public LevelController(DrawPanelLevel panel) {
 
         this.level = panel.getLevel();
+        this.dragOffset = new int[2];
 
         panel.addMouseListener(new MouseListener() {
 
@@ -29,12 +36,70 @@ public class LevelController {
             public void mousePressed(MouseEvent e) {
                 xSource = e.getX() / 120;
                 ySource = e.getY() / 120;
+
+                if (xSource > level.column() + 1 && ySource < 6 && level.getRessources()[ySource * 2 + (xSource - level.column() - 2)] > 0) {
+                    switch (ySource * 2 + (xSource - level.column() - 2)) {
+                        case 0: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.CROSS); break;
+                        case 1: {
+                            dragImg = Texture.getTextureTile(Color.WHITE, PipeType.LINE);
+                            dragImg.createGraphics().drawImage(Texture.getTextureTile(Color.WHITE, PipeType.OVER), 0, 0, null);
+                            break;
+                        }
+                        case 2: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.LINE); break;
+                        case 3: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.LINE, Orientation.EAST); break;
+                        case 4: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.TURN, Orientation.EAST); break;
+                        case 5: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.TURN, Orientation.SOUTH); break;
+                        case 6: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.TURN); break;
+                        case 7: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.TURN, Orientation.WEST); break;
+                        case 8: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.FORK); break;
+                        case 9: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.FORK, Orientation.EAST); break;
+                        case 10: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.FORK, Orientation.WEST); break;
+                        case 11: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.FORK, Orientation.SOUTH); break;
+                    }
+                    dragOffset[0] = e.getX() - (120 * xSource);
+                    dragOffset[1] = e.getY() - (120 * ySource);
+                } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".")) {
+                   int chr = 0;
+                   if (level.getCurrentState()[ySource][xSource].charAt(0) == '*') {
+                       chr++;
+                   }
+                   PipeType pipeType = null;
+                   Orientation orientation = null;
+
+                   dragImg = new BufferedImage(120, 120, BufferedImage.TYPE_INT_ARGB);
+
+                   switch (level.getCurrentState()[ySource][xSource].charAt(chr)) {
+                       case 'L' : pipeType = PipeType.LINE; break;
+                       case 'O' : {
+                           pipeType = PipeType.OVER;
+                           dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), 0, 0, null);
+                           break;
+                       }
+                       case 'T' : pipeType = PipeType.TURN; break;
+                       case 'F' : pipeType = PipeType.FORK; break;
+                       case 'C' : pipeType = PipeType.CROSS; break;
+                   }
+
+                   switch (level.getCurrentState()[ySource][xSource].charAt(chr + 1)) {
+                       case '0' : orientation = Orientation.NORTH; break;
+                       case '1' : orientation = Orientation.EAST; break;
+                       case '2' : orientation = Orientation.SOUTH; break;
+                       case '3' : orientation = Orientation.WEST; break;
+                   }
+
+                   dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), 0, 0, null);
+                   dragOffset[0] = e.getX() - (120 * xSource);
+                   dragOffset[1] = e.getY() - (120 * ySource);
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 int xTarget = e.getX() / 120;
                 int yTarget = e.getY() / 120;
+
+                dragImg = null;
+                panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
 
                 if (xSource > level.column() + 1 && ySource < 6) {
                     if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1 && level.getCurrentState()[yTarget][xTarget].equals(".")) {
@@ -98,11 +163,15 @@ public class LevelController {
             }
         });
 
-
         panel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-
+                if (dragImg != null) {
+                    panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
+                    Graphics g = panel.getAnimation().createGraphics();
+                    g.drawImage(dragImg, e.getX() - dragOffset[0], e.getY() - dragOffset[1], null);
+                }
+                panel.repaint();
             }
 
             @Override

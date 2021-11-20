@@ -104,21 +104,3 @@ public class Texture {
 	}
 }
 
-// Couleur des tuyaux.
-enum Color {
-	WHITE, RED, GREEN, BLUE, YELLOW, DARKGREY
-}
-
-// Type des tuyaux.
-enum PipeType {
-	SOURCE, LINE, OVER, TURN, FORK, CROSS
-}
-
-// Autres textures de la dernière ligne.
-enum Special {
-	DARKBROWN, LIGHTBROWN, BLACK, CORNER, BORDER, DOTS
-}
-
-enum Orientation {
-	NORTH, EAST, SOUTH, WEST
-}

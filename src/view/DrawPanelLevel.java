@@ -10,6 +10,7 @@ public class DrawPanelLevel extends JPanel {
 
 	private Level level;
 	private BufferedImage background;
+	private BufferedImage animation;
 
 	public DrawPanelLevel(Level level) {
 		int w = (level.column() + 4) * 120;
@@ -17,6 +18,7 @@ public class DrawPanelLevel extends JPanel {
 
 		this.setPreferredSize(new Dimension(w, h));
 		this.level = level;
+		this.animation = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
 		// Création de l'image de fond
 		this.background = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -176,6 +178,14 @@ public class DrawPanelLevel extends JPanel {
 		return level;
 	}
 
+	public BufferedImage getAnimation() {
+		return animation;
+	}
+
+	public void setAnimation(BufferedImage animation) {
+		this.animation = animation;
+	}
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		background(g);
@@ -248,8 +258,8 @@ public class DrawPanelLevel extends JPanel {
 					if (state[i][j].charAt(0) == '*') {
 						chr++;
 					}
-					view.PipeType pipeType = null;
-					view.Orientation orientation = null;
+					PipeType pipeType = null;
+					Orientation orientation = null;
 
 					switch (state[i][j].charAt(chr)) {
 						case 'L' : pipeType = PipeType.LINE; break;
@@ -277,6 +287,6 @@ public class DrawPanelLevel extends JPanel {
 	}
 
 	private void pipeMove(Graphics g) {
-
+		g.drawImage(animation, 0, 0, null);
 	}
 }
