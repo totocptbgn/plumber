@@ -58,17 +58,13 @@ public class LevelController {
                     }
                     dragOffset[0] = e.getX() - (120 * xSource);
                     dragOffset[1] = e.getY() - (120 * ySource);
-                } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".")) {
-                   int chr = 0;
-                   if (level.getCurrentState()[ySource][xSource].charAt(0) == '*') {
-                       chr++;
-                   }
+                } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[ySource][xSource].charAt(0) != '*') {
                    PipeType pipeType = null;
                    Orientation orientation = null;
 
                    dragImg = new BufferedImage(120, 120, BufferedImage.TYPE_INT_ARGB);
 
-                   switch (level.getCurrentState()[ySource][xSource].charAt(chr)) {
+                   switch (level.getCurrentState()[ySource][xSource].charAt(0)) {
                        case 'L' : pipeType = PipeType.LINE; break;
                        case 'O' : {
                            pipeType = PipeType.OVER;
@@ -80,7 +76,7 @@ public class LevelController {
                        case 'C' : pipeType = PipeType.CROSS; break;
                    }
 
-                   switch (level.getCurrentState()[ySource][xSource].charAt(chr + 1)) {
+                   switch (level.getCurrentState()[ySource][xSource].charAt(1)) {
                        case '0' : orientation = Orientation.NORTH; break;
                        case '1' : orientation = Orientation.EAST; break;
                        case '2' : orientation = Orientation.SOUTH; break;
@@ -180,6 +176,4 @@ public class LevelController {
             }
         });
     }
-
-
 }
