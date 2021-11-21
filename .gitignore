@@ -3,3 +3,5 @@ plumber.iml
 out/
 .DS_Store
 
+.gradle
+build

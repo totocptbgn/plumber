@@ -16,7 +16,7 @@ public class Level {
 	public Level(int id) {
 		// Contruction de currentState en lisant le fichier de niveau
 		try {
-			Scanner s = new Scanner(new File("src/data/level" + id + ".p"));
+			Scanner s = new Scanner(new File("data/level" + id + ".p"));
 			int height = s.nextInt();
 			int width = s.nextInt();
 
