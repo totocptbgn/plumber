@@ -12,13 +12,13 @@ import java.awt.image.BufferedImage;
 
 public class LevelController {
 
-    private Level level;
+    private Level level;                // Model du niveau actuel
 
-    BufferedImage dragImg;
-    int [] dragOffset;
+    BufferedImage dragImg;              // Buffer du tuyau qui se fait drag
+    int [] dragOffset;                  // Décalage par rapport au coin haut/gauche du tuyau
 
-    boolean dragging;
-    boolean actionPerformed;
+    boolean dragging;                   // Boolean true si le joueur est en train de drag
+    boolean actionPerformed;            // Boolean true si le dernier drag à mené à une action
 
     public LevelController(DrawPanelLevel panel) {
 
@@ -33,11 +33,6 @@ public class LevelController {
             int ySource;
 
             @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
             public void mousePressed(MouseEvent e) {
                 xSource = e.getX() / 120;
                 ySource = e.getY() / 120;
@@ -45,6 +40,9 @@ public class LevelController {
                 dragging = true;
                 actionPerformed = false;
 
+                // Construction de l'image de drag
+
+                // Cas où le joueur déplace un tuyau de la réserve
                 if (xSource > level.column() + 1 && ySource < 6 && level.getRessources()[ySource * 2 + (xSource - level.column() - 2)] > 0) {
                     switch (ySource * 2 + (xSource - level.column() - 2)) {
                         case 0: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.CROSS); break;
@@ -66,7 +64,10 @@ public class LevelController {
                     }
                     dragOffset[0] = e.getX() - (120 * xSource);
                     dragOffset[1] = e.getY() - (120 * ySource);
-                } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[ySource][xSource].charAt(0) != '*') {
+                }
+
+                // Cas où le joueur déplace un tuyau du plateau
+                else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[ySource][xSource].charAt(0) != '*') {
                    PipeType pipeType = null;
                    Orientation orientation = null;
 
@@ -105,7 +106,9 @@ public class LevelController {
                 dragImg = null;
                 panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
 
+                // Cas où le joueur drag à partir de la reserve
                 if (xSource > level.column() + 1 && ySource < 6) {
+                    // Vérification que la case cible soit bien du plateau et pas vide
                     if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1 && level.getCurrentState()[yTarget][xTarget].equals(".")) {
                         if (level.getRessources()[ySource * 2 + (xSource - level.column() - 2)] > 0) {
                             level.getRessources()[ySource * 2 + (xSource - level.column() - 2)]--;
@@ -126,8 +129,13 @@ public class LevelController {
                             actionPerformed = true;
                         }
                     }
-                } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1) {
+                }
+
+                // Cas où le joueur a drag à partir du plateau
+                else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1) {
+                    // Vérification que la case source ne soit pas vissée ni vide
                     if (level.getCurrentState()[ySource][xSource].charAt(0) != '*' && !level.getCurrentState()[ySource][xSource].equals(".")) {
+                        // Cas où le joueur a drag vers une case de la reserve
                         if (!(xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1)) {
                             switch (level.getCurrentState()[ySource][xSource]) {
                                 case "C0" : level.getRessources()[0]++; break;
@@ -145,7 +153,11 @@ public class LevelController {
                             }
                             level.getCurrentState()[ySource][xSource] = ".";
                             actionPerformed = true;
-                        } else if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1) {
+                        }
+
+                        // Cas où le joueur a drag vers une autre case du plateau
+                        else if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1) {
+                            // Vérification que les cases cibles et sources sont bien différentes
                             if (xSource != xTarget || ySource != xTarget) {
                                 if (level.getCurrentState()[ySource][xSource].charAt(0) != '*' && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[yTarget][xTarget].equals(".")) {
                                     level.getCurrentState()[yTarget][xTarget] = level.getCurrentState()[ySource][xSource];
@@ -158,23 +170,18 @@ public class LevelController {
                 }
                 panel.repaint();
                 dragging = false;
-                System.out.println(actionPerformed);
             }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
+            // Fonction inutiles ici à implémenter pour Mouse Listener
+            public void mouseClicked(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {}
+            public void mouseExited(MouseEvent e) {}
         });
 
         panel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                // On déplace dragImg à l'endroit où le pointeur se situe pendant le drag
                 if (dragImg != null) {
                     panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
                     Graphics g = panel.getAnimation().createGraphics();
@@ -183,10 +190,7 @@ public class LevelController {
                 panel.repaint();
             }
 
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
+            public void mouseMoved(MouseEvent e) {}
         });
     }
 }

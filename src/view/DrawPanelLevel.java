@@ -8,9 +8,9 @@ import java.awt.image.BufferedImage;
 
 public class DrawPanelLevel extends JPanel {
 
-	private Level level;
-	private BufferedImage background;
-	private BufferedImage animation;
+	private Level level;						// Model du niveau
+	private BufferedImage background;			// Save du background
+	private BufferedImage animation;			// Buffer pour l'affichage des animations
 
 	public DrawPanelLevel(Level level) {
 		int w = (level.column() + 4) * 120;
@@ -20,7 +20,7 @@ public class DrawPanelLevel extends JPanel {
 		this.level = level;
 		this.animation = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-		// Création de l'image de fond
+		// Création de l'image de backgroud
 		this.background = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Graphics g = background.createGraphics();
 
@@ -93,7 +93,7 @@ public class DrawPanelLevel extends JPanel {
 			y += 120;
 		}
 
-		// Dessin interieur puzzle
+		// Dessin du plateau
 		x = 120;
 		y = 120;
 		tile = Texture.getTextureTile(Special.DARKBROWN);
@@ -174,6 +174,8 @@ public class DrawPanelLevel extends JPanel {
 		}
 	}
 
+	// Getters & Setters
+
 	public Level getLevel() {
 		return level;
 	}
@@ -186,6 +188,7 @@ public class DrawPanelLevel extends JPanel {
 		this.animation = animation;
 	}
 
+	// Dessin sur le Graphics du JPanel
 	@Override
 	protected void paintComponent(Graphics g) {
 		background(g);
@@ -193,15 +196,17 @@ public class DrawPanelLevel extends JPanel {
 		pipeMove(g);
 	}
 
+	// Dessin du background
 	private void background(Graphics g) {
 		g.drawImage(background, 0, 0, null);
 	}
 
+	// Dessins des pièces de puzzle en fonction de l'état courant
 	private void foreground(Graphics g) {
 		String[][] state = level.getCurrentState();
 		int [] pipes = level.getRessources();
 
-		// Dessin des ressources
+		// Dessin de la réserve
 		int x;
 		int y = 0;
 
@@ -250,7 +255,7 @@ public class DrawPanelLevel extends JPanel {
 		}
 
 
-		// Dessin des tuyaux sans couleurs
+		// Dessin des tuyaux du plateau (sans couleurs)
 		for (int i = 1; i < state.length - 1; i++) {
 			for (int j = 1; j < state[0].length - 1; j++) {
 				if (!state[i][j].equals(".")) {
@@ -286,6 +291,7 @@ public class DrawPanelLevel extends JPanel {
 
 	}
 
+	// Dessin des animations de mouvement
 	private void pipeMove(Graphics g) {
 		g.drawImage(animation, 0, 0, null);
 	}
