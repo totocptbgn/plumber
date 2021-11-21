@@ -17,10 +17,15 @@ public class LevelController {
     BufferedImage dragImg;
     int [] dragOffset;
 
+    boolean dragging;
+    boolean actionPerformed;
+
     public LevelController(DrawPanelLevel panel) {
 
         this.level = panel.getLevel();
         this.dragOffset = new int[2];
+        this.dragging = false;
+        this.actionPerformed = false;
 
         panel.addMouseListener(new MouseListener() {
 
@@ -36,6 +41,9 @@ public class LevelController {
             public void mousePressed(MouseEvent e) {
                 xSource = e.getX() / 120;
                 ySource = e.getY() / 120;
+
+                dragging = true;
+                actionPerformed = false;
 
                 if (xSource > level.column() + 1 && ySource < 6 && level.getRessources()[ySource * 2 + (xSource - level.column() - 2)] > 0) {
                     switch (ySource * 2 + (xSource - level.column() - 2)) {
@@ -115,11 +123,12 @@ public class LevelController {
                                 case 10 : level.getCurrentState()[yTarget][xTarget] = "F3"; break;
                                 case 11 : level.getCurrentState()[yTarget][xTarget] = "F2"; break;
                             }
+                            actionPerformed = true;
                         }
                     }
                 } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1) {
                     if (level.getCurrentState()[ySource][xSource].charAt(0) != '*' && !level.getCurrentState()[ySource][xSource].equals(".")) {
-                        if (xTarget > level.column() + 1 && yTarget < 6) {
+                        if (!(xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1)) {
                             switch (level.getCurrentState()[ySource][xSource]) {
                                 case "C0" : level.getRessources()[0]++; break;
                                 case "O0" : level.getRessources()[1]++; break;
@@ -135,17 +144,21 @@ public class LevelController {
                                 case "F2" : level.getRessources()[11]++; break;
                             }
                             level.getCurrentState()[ySource][xSource] = ".";
+                            actionPerformed = true;
                         } else if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1) {
                             if (xSource != xTarget || ySource != xTarget) {
                                 if (level.getCurrentState()[ySource][xSource].charAt(0) != '*' && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[yTarget][xTarget].equals(".")) {
                                     level.getCurrentState()[yTarget][xTarget] = level.getCurrentState()[ySource][xSource];
                                     level.getCurrentState()[ySource][xSource] = ".";
+                                    actionPerformed = true;
                                 }
                             }
                         }
                     }
                 }
                 panel.repaint();
+                dragging = false;
+                System.out.println(actionPerformed);
             }
 
             @Override
