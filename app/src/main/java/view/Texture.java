@@ -10,7 +10,7 @@ public class Texture {
 	// Renvoie l'image des textures `pipes.gif` en entier.
 	private static BufferedImage getTextureImage() {
 		try {
-			return ImageIO.read(new File("src/data/pipes.gif"));
+			return ImageIO.read(new File("src/main/java/data/pipes.gif"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

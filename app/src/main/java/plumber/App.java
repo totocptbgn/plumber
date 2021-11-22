@@ -15,8 +15,7 @@ public class App {
     
     public static void main(String[] args) {
 
-		System.out.println(new File(".").getAbsolutePath());
-		/*
+		
         Application mainFrame = new Application();
 		mainFrame.setTitle("Plumber");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,8 +27,6 @@ public class App {
 
 		mainFrame.pack();
 		mainFrame.setVisible(true);
-
-		 */
     }
 
 	public Object getGreeting() {
