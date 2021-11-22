@@ -12,7 +12,6 @@ import javax.swing.*;
 public class App {
     
     public static void main(String[] args) {
-
 		
         Application mainFrame = new Application();
 		mainFrame.setTitle("Plumber");
