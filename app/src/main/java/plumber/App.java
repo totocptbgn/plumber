@@ -7,8 +7,6 @@ import application.Application;
 import controller.LevelController;
 import model.Level;
 import view.DrawPanelLevel;
-
-import java.io.File;
 import javax.swing.*;
 
 public class App {
@@ -21,7 +19,7 @@ public class App {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);
 
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel(new Level(1));
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel(new Level(2));
 		mainFrame.setPanel(panelLevel1);
 		LevelController controller1 = new LevelController(panelLevel1);
 
