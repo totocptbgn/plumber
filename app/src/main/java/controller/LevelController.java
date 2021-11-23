@@ -1,8 +1,8 @@
 package controller;
 
 import model.Level;
-import view.*;
 import view.Color;
+import view.*;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -16,16 +16,18 @@ public class LevelController {
 
     BufferedImage dragImg;              // Buffer du tuyau qui se fait drag
     int [] dragOffset;                  // Décalage par rapport au coin haut/gauche du tuyau
+    String dragSave;                    // Variable représentant l'objet déplacé en cas d'annulation
+                                        // Encodage :
+                                        //  - Case du plateau : P + position y + position x
+                                        //  - Case de la ressource : R + position de la ressource
 
     boolean dragging;                   // Boolean true si le joueur est en train de drag
-    boolean actionPerformed;            // Boolean true si le dernier drag à mené à une action
 
     public LevelController(DrawPanelLevel panel) {
 
         this.level = panel.getLevel();
         this.dragOffset = new int[2];
         this.dragging = false;
-        this.actionPerformed = false;
 
         panel.addMouseListener(new MouseListener() {
 
@@ -38,13 +40,12 @@ public class LevelController {
                 ySource = e.getY() / 120;
 
                 dragging = true;
-                actionPerformed = false;
-
-                // Construction de l'image de drag
 
                 // Cas où le joueur déplace un tuyau de la réserve
-                if (xSource > level.column() + 1 && ySource < 6 && level.getRessources()[ySource * 2 + (xSource - level.column() - 2)] > 0) {
-                    switch (ySource * 2 + (xSource - level.column() - 2)) {
+                int id = ySource * 2 + (xSource - level.column() - 2);
+                if (xSource > level.column() + 1 && ySource < 6 && level.getRessources()[id] > 0) {
+                    // Construction de l'image de drag
+                    switch (id) {
                         case 0: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.CROSS); break;
                         case 1: {
                             dragImg = Texture.getTextureTile(Color.WHITE, PipeType.LINE);
@@ -64,10 +65,15 @@ public class LevelController {
                     }
                     dragOffset[0] = e.getX() - (120 * xSource);
                     dragOffset[1] = e.getY() - (120 * ySource);
-                }
 
-                // Cas où le joueur déplace un tuyau du plateau
-                else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[ySource][xSource].charAt(0) != '*') {
+                    // Sauvegarde de la pièce dans dragSave au cas où l'action est annulée
+                    dragSave = "R" + id;
+                    level.getRessources()[id]--;
+
+                    // Cas où le joueur déplace un tuyau du plateau
+                } else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1 && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[ySource][xSource].charAt(0) != '*') {
+
+                   // Construction de l'image de drag
                    PipeType pipeType = null;
                    Orientation orientation = null;
 
@@ -95,6 +101,10 @@ public class LevelController {
                    dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), 0, 0, null);
                    dragOffset[0] = e.getX() - (120 * xSource);
                    dragOffset[1] = e.getY() - (120 * ySource);
+
+                    // Sauvegarde de la pièce dans dragSave au cas où l'action est annulée
+                   dragSave = "P" + level.getCurrentState()[ySource][xSource];
+                   level.getCurrentState()[ySource][xSource] = ".";
                 }
             }
 
@@ -108,11 +118,13 @@ public class LevelController {
 
                 // Cas où le joueur drag à partir de la reserve
                 if (xSource > level.column() + 1 && ySource < 6) {
-                    // Vérification que la case cible soit bien du plateau et pas vide
-                    if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1 && level.getCurrentState()[yTarget][xTarget].equals(".")) {
-                        if (level.getRessources()[ySource * 2 + (xSource - level.column() - 2)] > 0) {
-                            level.getRessources()[ySource * 2 + (xSource - level.column() - 2)]--;
-                            switch (ySource * 2 + (xSource - level.column() - 2)) {
+
+                    // Vérification de la variable de sauvegarde
+                    if (dragSave != null) {
+
+                        // Vérification que la case cible soit bien du plateau et pas vide
+                        if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1 && level.getCurrentState()[yTarget][xTarget].equals(".")) {
+                            switch (dragSave.charAt(1) - '0') {
                                 case 0 : level.getCurrentState()[yTarget][xTarget] = "C0"; break;
                                 case 1 : level.getCurrentState()[yTarget][xTarget] = "O0"; break;
                                 case 2 : level.getCurrentState()[yTarget][xTarget] = "L0"; break;
@@ -126,18 +138,23 @@ public class LevelController {
                                 case 10 : level.getCurrentState()[yTarget][xTarget] = "F3"; break;
                                 case 11 : level.getCurrentState()[yTarget][xTarget] = "F2"; break;
                             }
-                            actionPerformed = true;
+                            dragSave = null;
+                        } else {
+                            level.getRessources()[dragSave.charAt(1) - '0']++;
+                            dragSave = null;
                         }
                     }
                 }
 
                 // Cas où le joueur a drag à partir du plateau
                 else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1) {
-                    // Vérification que la case source ne soit pas vissée ni vide
-                    if (level.getCurrentState()[ySource][xSource].charAt(0) != '*' && !level.getCurrentState()[ySource][xSource].equals(".")) {
+
+                    // Vérification de la variable de sauvegarde
+                    if (dragSave != null) {
+
                         // Cas où le joueur a drag vers une case de la reserve
                         if (!(xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1)) {
-                            switch (level.getCurrentState()[ySource][xSource]) {
+                            switch (dragSave.substring(1)) {
                                 case "C0" : level.getRessources()[0]++; break;
                                 case "O0" : level.getRessources()[1]++; break;
                                 case "L0" : level.getRessources()[2]++; break;
@@ -151,19 +168,25 @@ public class LevelController {
                                 case "F3" : level.getRessources()[10]++; break;
                                 case "F2" : level.getRessources()[11]++; break;
                             }
-                            level.getCurrentState()[ySource][xSource] = ".";
-                            actionPerformed = true;
+                            dragSave = null;
                         }
 
                         // Cas où le joueur a drag vers une autre case du plateau
-                        else if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1) {
+                        else if (xTarget < level.column() + 1 && yTarget < level.line() + 1) {
+
                             // Vérification que les cases cibles et sources sont bien différentes
-                            if (xSource != xTarget || ySource != xTarget) {
-                                if (level.getCurrentState()[ySource][xSource].charAt(0) != '*' && !level.getCurrentState()[ySource][xSource].equals(".") && level.getCurrentState()[yTarget][xTarget].equals(".")) {
-                                    level.getCurrentState()[yTarget][xTarget] = level.getCurrentState()[ySource][xSource];
+                            if (dragSave.charAt(2) - '0' != xTarget || dragSave.charAt(1) - '0' != yTarget) {
+                                if (level.getCurrentState()[yTarget][xTarget].equals(".")) {
+                                    level.getCurrentState()[yTarget][xTarget] = dragSave.substring(1);
                                     level.getCurrentState()[ySource][xSource] = ".";
-                                    actionPerformed = true;
+                                    dragSave = null;
+                                } else {
+                                    level.getCurrentState()[ySource][xSource] = dragSave.substring(1);
+                                    dragSave = null;
                                 }
+                            } else {
+                                level.getCurrentState()[ySource][xSource] = dragSave.substring(1);
+                                dragSave = null;
                             }
                         }
                     }
@@ -172,7 +195,6 @@ public class LevelController {
                 dragging = false;
             }
 
-            // Fonction inutiles ici à implémenter pour Mouse Listener
             public void mouseClicked(MouseEvent e) {}
             public void mouseEntered(MouseEvent e) {}
             public void mouseExited(MouseEvent e) {}
@@ -181,6 +203,7 @@ public class LevelController {
         panel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+
                 // On déplace dragImg à l'endroit où le pointeur se situe pendant le drag
                 if (dragImg != null) {
                     panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
