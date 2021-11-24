@@ -22,13 +22,14 @@ public class LevelController {
                                         //  - Case du plateau : P + position y + position x
                                         //  - Case de la ressource : R + position de la ressource
 
-    private boolean dragging;           // Boolean true si le joueur est en train de drag
+    private UndoManager edits;          // Undo / Redo Manager
+    private JButton [] buttons;         // Undo & Redo buttons
 
     public LevelController(DrawPanelLevel panel) {
 
         this.level = panel.getLevel();
         this.dragOffset = new int[2];
-        this.dragging = false;
+        this.edits = panel.getEditManager();
 
         panel.addMouseListener(new MouseListener() {
 
@@ -37,11 +38,8 @@ public class LevelController {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println(e.getX() + " " + e.getY());
                 xSource = e.getX() / 120;
                 ySource = e.getY() / 120;
-
-                dragging = true;
 
                 // Cas où le joueur déplace un tuyau de la réserve
                 int id = ySource * 2 + (xSource - level.column() - 2);
@@ -85,7 +83,7 @@ public class LevelController {
                        case 'L' : pipeType = PipeType.LINE; break;
                        case 'O' : {
                            pipeType = PipeType.OVER;
-                           dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), 0, 0, null);
+                           dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), 0, 0, null); // TODO: Prendre en compte la couleur
                            break;
                        }
                        case 'T' : pipeType = PipeType.TURN; break;
@@ -100,7 +98,7 @@ public class LevelController {
                        case '3' : orientation = Orientation.WEST; break;
                    }
 
-                   dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), 0, 0, null);
+                   dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), 0, 0, null); // TODO: Prendre en compte la couleur
                    dragOffset[0] = e.getX() - (120 * xSource);
                    dragOffset[1] = e.getY() - (120 * ySource);
 
@@ -126,7 +124,7 @@ public class LevelController {
 
                         // Vérification que la case cible soit bien du plateau et pas vide
                         if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1 && level.getCurrentState()[yTarget][xTarget].equals(".")) {
-                            switch (dragSave.charAt(1) - '0') {
+                            switch (Integer.parseInt(dragSave.substring(1))) {
                                 case 0 : level.getCurrentState()[yTarget][xTarget] = "C0"; break;
                                 case 1 : level.getCurrentState()[yTarget][xTarget] = "O0"; break;
                                 case 2 : level.getCurrentState()[yTarget][xTarget] = "L0"; break;
@@ -140,9 +138,11 @@ public class LevelController {
                                 case 10 : level.getCurrentState()[yTarget][xTarget] = "F3"; break;
                                 case 11 : level.getCurrentState()[yTarget][xTarget] = "F2"; break;
                             }
+                            edits.recordAction(new Action("R" + dragSave.substring(1), "P" + yTarget + xTarget));
+                            checkButton();
                             dragSave = null;
                         } else {
-                            level.getRessources()[dragSave.charAt(1) - '0']++;
+                            level.getRessources()[Integer.parseInt(dragSave.substring(1))]++;
                             dragSave = null;
                         }
                     }
@@ -156,20 +156,24 @@ public class LevelController {
 
                         // Cas où le joueur a drag vers une case de la reserve
                         if (!(xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1)) {
+                            int id = -1;
                             switch (dragSave.substring(1)) {
-                                case "C0" : level.getRessources()[0]++; break;
-                                case "O0" : level.getRessources()[1]++; break;
-                                case "L0" : level.getRessources()[2]++; break;
-                                case "L1" : level.getRessources()[3]++; break;
-                                case "T1" : level.getRessources()[4]++; break;
-                                case "T2" : level.getRessources()[5]++; break;
-                                case "T0" : level.getRessources()[6]++; break;
-                                case "T3" : level.getRessources()[7]++; break;
-                                case "F0" : level.getRessources()[8]++; break;
-                                case "F1" : level.getRessources()[9]++; break;
-                                case "F3" : level.getRessources()[10]++; break;
-                                case "F2" : level.getRessources()[11]++; break;
+                                case "C0" : id = 0; break;
+                                case "O0" : id = 1; break;
+                                case "L0" : id = 2; break;
+                                case "L1" : id = 3; break;
+                                case "T1" : id = 4; break;
+                                case "T2" : id = 5; break;
+                                case "T0" : id = 6; break;
+                                case "T3" : id = 7; break;
+                                case "F0" : id = 8; break;
+                                case "F1" : id = 9; break;
+                                case "F3" : id = 10; break;
+                                case "F2" : id = 11; break;
                             }
+                            level.getRessources()[id]++;
+                            edits.recordAction(new Action("P" + ySource + xSource, "R" + id));
+                            checkButton();
                             dragSave = null;
                         }
 
@@ -177,16 +181,20 @@ public class LevelController {
                         else if (xTarget < level.column() + 1 && yTarget < level.line() + 1) {
 
                             // Vérification que les cases cibles et sources sont bien différentes
-                            if (dragSave.charAt(2) - '0' != xTarget || dragSave.charAt(1) - '0' != yTarget) {
+                            if (xSource != xTarget || ySource != yTarget) {
                                 if (level.getCurrentState()[yTarget][xTarget].equals(".")) {
                                     level.getCurrentState()[yTarget][xTarget] = dragSave.substring(1);
                                     level.getCurrentState()[ySource][xSource] = ".";
+                                    edits.recordAction(new Action("P" + ySource + xSource, "P" + yTarget + xTarget));
+                                    checkButton();
                                     dragSave = null;
                                 } else {
+                                    // Case cible remplie
                                     level.getCurrentState()[ySource][xSource] = dragSave.substring(1);
                                     dragSave = null;
                                 }
                             } else {
+                                // Même Case
                                 level.getCurrentState()[ySource][xSource] = dragSave.substring(1);
                                 dragSave = null;
                             }
@@ -194,7 +202,6 @@ public class LevelController {
                     }
                 }
                 panel.repaint();
-                dragging = false;
             }
 
             public void mouseClicked(MouseEvent e) {}
@@ -219,17 +226,26 @@ public class LevelController {
         });
 
         // Configuration des boutons de menu
-        JButton [] buttons = panel.getButtons();
+        this.buttons = panel.getButtons();
 
         // Undo button
         buttons[0].addActionListener(e -> {
-            System.out.println("Undo.");
+            edits.undo();
+            checkButton();
+            panel.repaint();
         });
 
         // Redo button
         buttons[1].addActionListener(e -> {
-            System.out.println("Redo.");
+            edits.redo();
+            checkButton();
+            panel.repaint();
         });
+        checkButton();
+    }
 
+    private void checkButton() {
+        buttons[0].setEnabled(edits.canUndo());
+        buttons[1].setEnabled(edits.canRedo());
     }
 }

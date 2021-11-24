@@ -1,5 +1,6 @@
 package view;
 
+import controller.UndoManager;
 import model.Level;
 
 import javax.imageio.ImageIO;
@@ -16,6 +17,7 @@ public class DrawPanelLevel extends JPanel {
 	private BufferedImage background;			// Save du background
 	private BufferedImage animation;			// Buffer pour l'affichage des animations
 	private JButton [] buttons;        			// Boutons de la menu bar, accessible par le controller par un getter
+	private UndoManager edits;					// Edit Manager, accessible
 
 	public DrawPanelLevel(Level level, JFrame frame) {
 		int w = (level.column() + 4) * 120;
@@ -205,6 +207,8 @@ public class DrawPanelLevel extends JPanel {
 		buttons[0] = undoBtn;
 		buttons[1] = redoBtn;
 
+		// Undo / Redo Manager
+		this.edits = new UndoManager(level);
 	}
 
 	// Getters & Setters
@@ -223,6 +227,10 @@ public class DrawPanelLevel extends JPanel {
 
 	public JButton[] getButtons() {
 		return buttons;
+	}
+
+	public UndoManager getEditManager() {
+		return edits;
 	}
 
 	// Dessin sur le Graphics du JPanel

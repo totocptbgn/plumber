@@ -1,6 +1,5 @@
 package model;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -20,13 +19,17 @@ public class Level {
 			int height = s.nextInt();
 			int width = s.nextInt();
 
+			if (height > 9 || width > 9) {
+				throw new Exception("Width and heigth level are limited to 9.");
+			}
+
 			this.currentState = new String[height][width];
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 					currentState[i][j] = s.next();
 				}
 			}
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
