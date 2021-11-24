@@ -4,6 +4,7 @@ import model.Level;
 import view.Color;
 import view.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,14 +15,14 @@ public class LevelController {
 
     private Level level;                // Model du niveau actuel
 
-    BufferedImage dragImg;              // Buffer du tuyau qui se fait drag
-    int [] dragOffset;                  // Décalage par rapport au coin haut/gauche du tuyau
-    String dragSave;                    // Variable représentant l'objet déplacé en cas d'annulation
+    private BufferedImage dragImg;      // Buffer du tuyau qui se fait drag
+    private int [] dragOffset;          // Décalage par rapport au coin haut/gauche du tuyau
+    private String dragSave;            // Variable représentant l'objet déplacé en cas d'annulation
                                         // Encodage :
                                         //  - Case du plateau : P + position y + position x
                                         //  - Case de la ressource : R + position de la ressource
 
-    boolean dragging;                   // Boolean true si le joueur est en train de drag
+    private boolean dragging;           // Boolean true si le joueur est en train de drag
 
     public LevelController(DrawPanelLevel panel) {
 
@@ -36,6 +37,7 @@ public class LevelController {
 
             @Override
             public void mousePressed(MouseEvent e) {
+                System.out.println(e.getX() + " " + e.getY());
                 xSource = e.getX() / 120;
                 ySource = e.getY() / 120;
 
@@ -215,5 +217,19 @@ public class LevelController {
 
             public void mouseMoved(MouseEvent e) {}
         });
+
+        // Configuration des boutons de menu
+        JButton [] buttons = panel.getButtons();
+
+        // Undo button
+        buttons[0].addActionListener(e -> {
+            System.out.println("Undo.");
+        });
+
+        // Redo button
+        buttons[1].addActionListener(e -> {
+            System.out.println("Redo.");
+        });
+
     }
 }

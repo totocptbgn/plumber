@@ -25,7 +25,7 @@ public class Application extends JFrame {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);
 
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel(new Level(2));
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel(new Level(2), mainFrame);
 		mainFrame.setPanel(panelLevel1);
 		LevelController controller1 = new LevelController(panelLevel1);
 

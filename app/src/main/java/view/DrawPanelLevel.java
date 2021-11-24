@@ -1,18 +1,23 @@
 package view;
 
 import model.Level;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DrawPanelLevel extends JPanel {
 
 	private Level level;						// Model du niveau
 	private BufferedImage background;			// Save du background
 	private BufferedImage animation;			// Buffer pour l'affichage des animations
+	private JButton [] buttons;        			// Boutons de la menu bar, accessible par le controller par un getter
 
-	public DrawPanelLevel(Level level) {
+	public DrawPanelLevel(Level level, JFrame frame) {
 		int w = (level.column() + 4) * 120;
 		int h = Math.max(level.line() + 2, 6) * 120;
 
@@ -172,6 +177,34 @@ public class DrawPanelLevel extends JPanel {
 				}
 			}
 		}
+
+		// Construction de la menu bar
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+
+		JButton undoBtn = new JButton("Undo");
+		BufferedImage buffimg = null;
+		try {
+			buffimg = ImageIO.read(new File("src/main/java/data/undo.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		undoBtn.setIcon(new ImageIcon(buffimg));
+		menuBar.add(undoBtn);
+
+		JButton redoBtn = new JButton("Redo");
+		try {
+			buffimg = ImageIO.read(new File("src/main/java/data/redo.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		redoBtn.setIcon(new ImageIcon(buffimg));
+		menuBar.add(redoBtn);
+
+		buttons = new JButton[2];
+		buttons[0] = undoBtn;
+		buttons[1] = redoBtn;
+
 	}
 
 	// Getters & Setters
@@ -186,6 +219,10 @@ public class DrawPanelLevel extends JPanel {
 
 	public void setAnimation(BufferedImage animation) {
 		this.animation = animation;
+	}
+
+	public JButton[] getButtons() {
+		return buttons;
 	}
 
 	// Dessin sur le Graphics du JPanel
