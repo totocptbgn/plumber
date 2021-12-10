@@ -329,6 +329,8 @@ public class DrawPanelLevel extends JPanel {
 						case '2' : orientation = Orientation.SOUTH; break;
 						case '3' : orientation = Orientation.WEST; break;
 					}
+
+					// TODO: Aller chercher la couleur dans Level.colorState
 					g.drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), j * 120, i * 120, null);
 				}
 			}

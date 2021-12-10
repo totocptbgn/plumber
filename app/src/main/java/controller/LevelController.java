@@ -201,6 +201,8 @@ public class LevelController {
                         }
                     }
                 }
+                // TODO : vérifier
+                level.updateColor();
                 panel.repaint();
             }
 

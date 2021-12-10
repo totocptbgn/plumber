@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Level {
 
 	private String currentState[][];
+	private String colorState[][];
 	private int ressources[]; // C0, O0, L0, L1, T1, T2, T0, T3, F0, F1, F3, F2
 
 	public Level(int id) {
@@ -59,6 +60,15 @@ public class Level {
 				}
 			}
 		}
+	}
+
+	public void updateColor() {
+		// TODO: remplir colorState
+	}
+
+	public boolean isCompleted() {
+		//TODO: detecter la victoire
+		return false;
 	}
 
 	public int column() {

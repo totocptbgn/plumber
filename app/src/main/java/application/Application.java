@@ -17,9 +17,7 @@ public class Application extends JFrame {
 		this.getContentPane().add(panel);
 	}
 
-
 	public static void main(String[] args) {
-
 		Application mainFrame = new Application();
 		mainFrame.setTitle("Plumber");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
