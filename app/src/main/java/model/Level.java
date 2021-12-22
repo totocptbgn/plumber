@@ -1,5 +1,6 @@
 package model;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -64,6 +65,48 @@ public class Level {
 
 	public void updateColor() {
 		// TODO: remplir colorState
+		this.colorState = new String[this.currentState.length][this.currentState[0].length];
+		ArrayList<Integer[]> colorChecked = new ArrayList<Integer[]>();
+		// On effectue les changements depuis la première et la dernière ligne
+		for(int i = 0; i < currentState.length; i+=currentState.length-1) {
+			for(int j = 0; j < currentState[0].length; j++) {
+				// Est-ce qu'on a déjà vérifié cette source?
+				for(Integer[] alreadyChecked: colorChecked) {
+					if(alreadyChecked[0]==i&&alreadyChecked[1]==j) {
+						continue;
+					}
+				}
+				// Est-ce que cet élément est une source?
+				if(currentState[i][j].contains("R") || currentState[i][j].contains("G")
+						|| currentState[i][j].contains("B") || currentState[i][j].contains("Y")) {
+					String color = currentState[i][j].split("")[0];
+					ArrayList<Integer[]> toCheck = new ArrayList<Integer[]>();
+					Integer[] coordinatesToCheck = {new Integer(i), new Integer(j)};
+					toCheck.add(coordinatesToCheck);
+					// Tant qu'on a un prochain élément connecté à la source à vérifier
+					while(!toCheck.isEmpty()) {
+						for(Integer[] toRemove : toCheck) {
+							toCheck.remove(toRemove);
+							// Est-ce qu'on a déjà vérifié cette tile?
+							boolean hasAlreadyBeenChecked = false;
+							for(Integer[] alreadyChecked: colorChecked) {
+								if(alreadyChecked[0]==toRemove[0]&&alreadyChecked[1]==toRemove[1]) { //TODO: tester si c'est une tile OVER
+									hasAlreadyBeenChecked = true;
+									break;
+								}
+							}
+							if(hasAlreadyBeenChecked) {
+								continue;
+							}
+							colorState[toRemove[0]][toRemove[1]].concat(color);
+							//TODO: choisir les prochaines tiles à check
+						}
+					}
+				}
+				else continue;
+				//this.colorState[0][0].concat("");
+			}
+		}
 	}
 
 	public boolean isCompleted() {

@@ -50,9 +50,7 @@ public class MenuPanel extends JPanel{
 		
 		// Bouton quitter
 		JButton quit = new JButton("Quitter");
-		System.out.println("a");
 		controller.setButtonAction(quit);
-		System.out.println("b");
 		mainMenu.add(quit);
 		
 		for(int i = 0; i < 4; i++)
@@ -63,7 +61,7 @@ public class MenuPanel extends JPanel{
 		levelSelect.setLayout(new GridLayout(0,11));
 		for(int j = 0; j < 12; j++)
 			levelSelect.add(Box.createHorizontalGlue());
-		File folder = new File("src/data/");
+		File folder = new File("src/main/java/data");
 		File[] listOfFiles = folder.listFiles();
 		int i = 1;
 		for(File file : listOfFiles) {

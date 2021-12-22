@@ -44,7 +44,7 @@ public class Application extends JFrame {
 	}
 
 	public void startGame(String levelName) {
-		DrawPanelLevel panelLevel = new DrawPanelLevel(new Level(Integer.parseInt(levelName.split(" ")[1])), this)
+		DrawPanelLevel panelLevel = new DrawPanelLevel(new Level(Integer.parseInt(levelName.split(" ")[1])), this);
 		this.setContentPane(panelLevel);
 		LevelController controller1 = new LevelController(panelLevel);
 	}
