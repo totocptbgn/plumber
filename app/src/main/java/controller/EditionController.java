@@ -49,8 +49,13 @@ public class EditionController {
             panel.repaint();
         });
 
-        // Save button
+        // Resize button
         buttons[1].addActionListener(e -> {
+
+        });
+
+        // Save button
+        buttons[2].addActionListener(e -> {
 
         });
 

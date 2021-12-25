@@ -2,9 +2,12 @@ package view;
 
 import model.Level;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DrawPanelEdition extends JPanel{
 
@@ -22,14 +25,40 @@ public class DrawPanelEdition extends JPanel{
         // Construction de la menu bar
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
+
         JButton clearBtn = new JButton("Clear");
+        BufferedImage buffimg = null;
+        try {
+            buffimg = ImageIO.read(new File("src/main/java/data/clear.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        clearBtn.setIcon(new ImageIcon(buffimg));
         menuBar.add(clearBtn);
+
+        JButton resize = new JButton("Resize");
+        try {
+            buffimg = ImageIO.read(new File("src/main/java/data/resize.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        resize.setIcon(new ImageIcon(buffimg));
+        menuBar.add(resize);
+
         JButton saveBtn = new JButton("Save Copy");
+        try {
+            buffimg = ImageIO.read(new File("src/main/java/data/save.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        saveBtn.setIcon(new ImageIcon(buffimg));
         menuBar.add(saveBtn);
 
-        buttons = new JButton[2];
+        buttons = new JButton[3];
         buttons[0] = clearBtn;
-        buttons[1] = saveBtn;
+        buttons[1] = resize;
+        buttons[2] = saveBtn;
+
     }
 
     // Change la taille de la fenêtre en fonction des changements faits au niveau (this.level)
