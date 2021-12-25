@@ -102,6 +102,7 @@ public class EditionController {
                 // TODO : Create new level from current state
             }
         });
+        buttons[2].setEnabled(false);
 
         panel.addMouseListener(new MouseListener() {
             @Override
