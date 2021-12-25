@@ -11,6 +11,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ *  Classe controller pour DrawPanelLevel
+ */
+
 public class LevelController {
 
     private Level level;                // Model du niveau actuel

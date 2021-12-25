@@ -9,11 +9,15 @@ import java.util.Scanner;
 
 public class Level {
 
-	private String currentState[][];
-	private String colorState[][];
-	private int ressources[]; // C0, O0, L0, L1, T1, T2, T0, T3, F0, F1, F3, F2
+	private boolean editionMode;				// Si vrai, le plateau n'est pas vidée, et la reserve reste vide.
 
-	public Level(int id) {
+	private String currentState[][];			// Listes des états des tuyaux du plateau
+	private String colorState[][];				// Listes des couleurs des tuyaux du plateau
+	private int ressources[]; 					// Liste des tuyaux : C0, O0, L0, L1, T1, T2, T0, T3, F0, F1, F3, F2
+
+	public Level(int id, boolean editionMode) {
+		this.editionMode = editionMode;
+
 		// Contruction de currentState en lisant le fichier de niveau
 		try {
 			Scanner s = new Scanner(new File("src/main/java/data/level" + id + ".p"));
@@ -38,6 +42,11 @@ public class Level {
 		ressources = new int[12];
 		Arrays.fill(ressources, 0);
 
+		// Si on est en mode édition, alors on ne vide pas le plateau dans la ressource
+		if (editionMode) {
+			return;
+		}
+
 		for (int i = 1; i < currentState.length - 1; i++) {
 			for (int j = 1; j < currentState[0].length - 1; j++) {
 				String tile = currentState[i][j];
@@ -56,7 +65,6 @@ public class Level {
 						case "F3" : ressources[10]++; break;
 						case "F2" : ressources[11]++; break;
 					}
-					currentState[i][j] = ".";
 				}
 			}
 		}
@@ -67,7 +75,7 @@ public class Level {
 	}
 
 	public boolean isCompleted() {
-		//TODO: detecter la victoire
+		// TODO: detecter la victoire
 		return false;
 	}
 

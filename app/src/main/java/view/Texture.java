@@ -64,7 +64,7 @@ public class Texture {
 			case BLACK : column = 2; break;
 			case CORNER : column = 3; break;
 			case BORDER : column = 4; break;
-			case DOTS : column = 5; break;
+			case SCREWS: column = 5; break;
 		}
 
 		return rotateImage(getTextureTile(column, 6), o);

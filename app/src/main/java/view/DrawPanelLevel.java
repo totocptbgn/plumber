@@ -19,13 +19,14 @@ public class DrawPanelLevel extends JPanel {
 	private JButton [] buttons;        			// Boutons de la menu bar, accessible par le controller par un getter
 	private UndoManager edits;					// Edit Manager, accessible
 
-	public DrawPanelLevel(Level level, JFrame frame) {
+	public DrawPanelLevel(int id, JFrame frame) {
+		this.level = new Level(id, false);
 		int w = (level.column() + 4) * 120;
 		int h = Math.max(level.line() + 2, 6) * 120;
 
 		this.setPreferredSize(new Dimension(w, h));
-		this.level = level;
 		this.animation = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		frame.setTitle("Plumber - Level " + id);
 
 		// Création de l'image de backgroud
 		this.background = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -38,7 +39,7 @@ public class DrawPanelLevel extends JPanel {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, w, h);
 
-		// Dessin du fond la barre à tuyaux
+		// Dessin du fond de la reserve
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 6; j++) {
 				g.drawImage(tile, x, y, null);
@@ -174,7 +175,7 @@ public class DrawPanelLevel extends JPanel {
 				if (state[i][j].charAt(0) == '*') {
 					x = j * 120;
 					y = i * 120;
-					tile = Texture.getTextureTile(Special.DOTS);
+					tile = Texture.getTextureTile(Special.SCREWS);
 					g.drawImage(tile, x, y, null);
 				}
 			}
