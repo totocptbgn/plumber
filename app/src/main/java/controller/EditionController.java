@@ -6,6 +6,8 @@ import view.DrawPanelEdition;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Arrays;
 
 /**
@@ -49,6 +51,7 @@ public class EditionController {
 
         // Resize button
         buttons[1].addActionListener(e -> {
+            // On créer un panel pour la dialog box
             JTextField heightField = new JTextField(5);
             JTextField widthField = new JTextField(5);
 
@@ -60,11 +63,14 @@ public class EditionController {
             dialogPanel.add(widthField);
 
             int result = JOptionPane.showConfirmDialog(panel.getFrame(), dialogPanel,"Pick new values from 2 to 9.", JOptionPane.OK_CANCEL_OPTION);
+
+            // On traite les entrées
             if (result == JOptionPane.OK_OPTION) {
                 try {
                     int h = Integer.parseInt(heightField.getText());
                     int w = Integer.parseInt(widthField.getText());
 
+                    // Si l'utilisateur rentre des chifres par entre 2 et 9
                     if (h < 2 || h > 9 || w < 2 || w > 9) {
                         JOptionPane.showMessageDialog(panel.getFrame(),
                                 "Board size was not changed because the values must be between 2 and 9 included.",
@@ -72,10 +78,12 @@ public class EditionController {
                                 JOptionPane.ERROR_MESSAGE
                         );
                     }
+
                     level.changeLevelSize(h, w);
                     panel.updateFrameSize();
                     panel.repaint();
                 } catch (NumberFormatException nfe)  {
+                    // Si l'utilisateur rentre autre chose que des chiffres, on affiche un message d'erreur
                     JOptionPane.showMessageDialog(panel.getFrame(),
                             "Board size was not changed because the values must be numbers.",
                             "Wrong Values",
@@ -87,22 +95,45 @@ public class EditionController {
 
         // Save button
         buttons[2].addActionListener(e -> {
-            Object[] options = {"Yes", "Cancel"};
-            int result = JOptionPane.showOptionDialog(panel.getFrame(),
-                    "Do you want to save this level into a new file ?",
-                    "Warning",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE,
-                    null,
-                    options,
-                    options[0]
-            );
+            // On vérifie que le niveau est complet
+            boolean win = true; // TODO : Check if the level is in a winning position
 
-            if (result == JOptionPane.YES_OPTION) {
-                // TODO : Create new level from current state
+            // Si il l'est on construit un fichier .p pour sauvegarder le niveau
+            if (win) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(level.column() + 2).append(" ").append(level.line() + 2).append("\n");
+                for (String[] row : level.getCurrentState()) {
+                    for (String s : row) {
+                        stringBuilder.append(s).append("  ");
+                    }
+                    stringBuilder.append("\n");
+                }
+
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File("./src/main/java/data"));
+                int retrival = chooser.showSaveDialog(panel);
+                if (retrival == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        String filename = chooser.getSelectedFile().toString();
+                        // On ajoute l'extension .p si l'utilisateur ne l'a pas fait
+                        if (!(filename.substring(filename.length() - 2).equals(".p"))) {
+                            filename += ".p";
+                        }
+                        FileWriter fw = new FileWriter(filename);
+                        fw.write(stringBuilder.toString());
+                        fw.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(panel.getFrame(),
+                        "The level must be complete (or in other words, in a winning setup) to be saved.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
         });
-        buttons[2].setEnabled(false);
 
         panel.addMouseListener(new MouseListener() {
             @Override
