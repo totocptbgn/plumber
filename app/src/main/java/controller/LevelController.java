@@ -240,6 +240,7 @@ public class LevelController {
             checkButton();
             panel.repaint();
         });
+        buttons[0].setToolTipText("Undo last action.");
 
         // Redo button
         buttons[1].addActionListener(e -> {
@@ -247,6 +248,8 @@ public class LevelController {
             checkButton();
             panel.repaint();
         });
+        buttons[0].setToolTipText("Redo last action.");
+
         checkButton();
     }
 

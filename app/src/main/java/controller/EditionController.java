@@ -48,6 +48,7 @@ public class EditionController {
             panel.updateBackground();
             panel.repaint();
         });
+        buttons[0].setToolTipText("Remove all the tiles from the board.");
 
         // Resize button
         buttons[1].addActionListener(e -> {
@@ -77,6 +78,7 @@ public class EditionController {
                                 "Wrong Values",
                                 JOptionPane.ERROR_MESSAGE
                         );
+                        return;
                     }
 
                     level.changeLevelSize(h, w);
@@ -92,6 +94,7 @@ public class EditionController {
                 }
             }
         });
+        buttons[1].setToolTipText("Clear the board and resize the it.");
 
         // Save button
         buttons[2].addActionListener(e -> {
@@ -134,6 +137,7 @@ public class EditionController {
                 );
             }
         });
+        buttons[2].setToolTipText("Save into a file the complete level.");
 
         panel.addMouseListener(new MouseListener() {
             @Override
