@@ -69,6 +69,29 @@ public class Level {
 			}
 		}
 	}
+	// Change la taille du niveau en mode edition
+	public void changeLevelSize(int h, int w) {
+		if (!editionMode) {
+			throw new IllegalStateException("Level are not supposed to be able to change size out of edition mode.");
+		}
+		if (h > 9 || w > 9) {
+			throw new IllegalArgumentException("Width and heigth level are limited to 9.");
+		}
+
+		this.currentState = new String[h + 2][w + 2];
+
+		// On remplit le level.currentState de points
+		for (String[] row : currentState) {
+			Arrays.fill(row, ".");
+		}
+		// Puis on remplit les bordures avec des X.
+		Arrays.fill(currentState[0], "X");
+		Arrays.fill(currentState[currentState.length - 1], "X");
+		for (int i = 0; i < currentState.length; i++) {
+			currentState[i][0] = "X";
+			currentState[i][currentState[0].length - 1] = "X";
+		}
+	}
 
 	public void updateColor() {
 		// TODO: remplir colorState

@@ -4,9 +4,7 @@ import model.Level;
 import view.DrawPanelEdition;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
@@ -51,12 +49,58 @@ public class EditionController {
 
         // Resize button
         buttons[1].addActionListener(e -> {
+            JTextField heightField = new JTextField(5);
+            JTextField widthField = new JTextField(5);
 
+            JPanel dialogPanel = new JPanel();
+            dialogPanel.add(new JLabel("Height : "));
+            dialogPanel.add(heightField);
+            dialogPanel.add(Box.createHorizontalStrut(15));
+            dialogPanel.add(new JLabel("Width : "));
+            dialogPanel.add(widthField);
+
+            int result = JOptionPane.showConfirmDialog(panel.getFrame(), dialogPanel,"Pick new values from 2 to 9.", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                try {
+                    int h = Integer.parseInt(heightField.getText());
+                    int w = Integer.parseInt(widthField.getText());
+
+                    if (h < 2 || h > 9 || w < 2 || w > 9) {
+                        JOptionPane.showMessageDialog(panel.getFrame(),
+                                "Board size was not changed because the values must be between 2 and 9 included.",
+                                "Wrong Values",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                    level.changeLevelSize(h, w);
+                    panel.updateFrameSize();
+                    panel.repaint();
+                } catch (NumberFormatException nfe)  {
+                    JOptionPane.showMessageDialog(panel.getFrame(),
+                            "Board size was not changed because the values must be numbers.",
+                            "Wrong Values",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
         });
 
         // Save button
         buttons[2].addActionListener(e -> {
+            Object[] options = {"Yes", "Cancel"};
+            int result = JOptionPane.showOptionDialog(panel.getFrame(),
+                    "Do you want to save this level into a new file ?",
+                    "Warning",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            );
 
+            if (result == JOptionPane.YES_OPTION) {
+                // TODO : Create new level from current state
+            }
         });
 
         panel.addMouseListener(new MouseListener() {
@@ -73,6 +117,21 @@ public class EditionController {
             @Override
             public void mouseDragged(MouseEvent e) {}
             public void mouseMoved(MouseEvent e) {}
+        });
+
+        // Close window confirmation
+        panel.getFrame().addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                int result = JOptionPane.showConfirmDialog(panel.getFrame(),
+                        "Do you want to Exit ?",
+                        "Exit Confirmation : ",
+                        JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    panel.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                } else if (result == JOptionPane.NO_OPTION) {
+                    panel.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+            }
         });
     }
 }

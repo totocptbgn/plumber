@@ -15,9 +15,11 @@ public class DrawPanelEdition extends JPanel{
     private BufferedImage background;			// Save du background
     private BufferedImage animation;			// Buffer pour l'affichage des animations
     private JButton [] buttons;                 // Boutons de la menu bar, accessible par le controller par un getter
+    private JFrame frame;                       // Frame dans lequel le JPanel s'affiche
 
     public DrawPanelEdition(int id, JFrame frame) {
         this.level = new Level(id, true);
+        this.frame = frame;
         updateFrameSize();
 
         frame.setTitle("Plumber - Level " + id + " - Edition Mode");
@@ -58,7 +60,6 @@ public class DrawPanelEdition extends JPanel{
         buttons[0] = clearBtn;
         buttons[1] = resize;
         buttons[2] = saveBtn;
-
     }
 
     // Change la taille de la fenêtre en fonction des changements faits au niveau (this.level)
@@ -68,6 +69,7 @@ public class DrawPanelEdition extends JPanel{
 
         this.setPreferredSize(new Dimension(w, h));
         this.animation = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        frame.pack();
 
         updateBackground();
     }
@@ -226,6 +228,10 @@ public class DrawPanelEdition extends JPanel{
 
     public JButton[] getButtons() {
         return buttons;
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 
     // Dessin sur le Graphics du JPanel
