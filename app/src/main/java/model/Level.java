@@ -65,6 +65,7 @@ public class Level {
 						case "F3" : ressources[10]++; break;
 						case "F2" : ressources[11]++; break;
 					}
+					currentState[i][j] = ".";
 				}
 			}
 		}

@@ -234,6 +234,14 @@ public class DrawPanelEdition extends JPanel{
         return frame;
     }
 
+    public BufferedImage getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(BufferedImage animation) {
+        this.animation = animation;
+    }
+
     // Dessin sur le Graphics du JPanel
     @Override
     protected void paintComponent(Graphics g) {
@@ -334,7 +342,6 @@ public class DrawPanelEdition extends JPanel{
                 }
             }
         }
-
     }
 
     // Dessin des animations de mouvement

@@ -218,7 +218,6 @@ public class LevelController {
         panel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-
                 // On déplace dragImg à l'endroit où le pointeur se situe pendant le drag
                 if (dragImg != null) {
                     panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));

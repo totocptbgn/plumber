@@ -1,9 +1,11 @@
 package controller;
 
 import model.Level;
-import view.DrawPanelEdition;
+import view.*;
+import view.Color;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,14 +22,14 @@ public class EditionController {
 
     private BufferedImage dragImg;      // Buffer du tuyau qui se fait drag
     private int [] dragOffset;          // Décalage par rapport au coin haut/gauche du tuyau
-    // private String dragSave;         // Variable représentant l'objet déplacé en cas d'annulation
+    private String dragSave;            // Variable représentant l'objet déplacé en cas d'annulation
 
     private JButton [] buttons;         // Undo & Redo buttons
 
     public EditionController(DrawPanelEdition panel) {
 
         this.level = panel.getLevel();
-        // this.dragOffset = new int[2];
+        this.dragOffset = new int[2];
 
         // Configuration des boutons de menu
         this.buttons = panel.getButtons();
@@ -140,18 +142,134 @@ public class EditionController {
         buttons[2].setToolTipText("Save into a file the complete level.");
 
         panel.addMouseListener(new MouseListener() {
+
+            int xSource;
+            int ySource;
+
             @Override
-            public void mousePressed(MouseEvent e) {}
+            public void mousePressed(MouseEvent e) {
+                xSource = e.getX() / 120;
+                ySource = e.getY() / 120;
+
+                // Cas où on clique sur la reserve
+                if (xSource > level.column() + 1 && ySource <= 6) {
+                    int id = ySource * 2 + (xSource - level.column() - 2);
+                    switch (id) {
+                        case 0: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.CROSS); break;
+                        case 1: {
+                            dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.LINE);
+                            dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.OVER), 0, 0, null);
+                            break;
+                        }
+                        case 2: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.LINE); break;
+                        case 3: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.LINE, Orientation.EAST); break;
+                        case 4: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.TURN, Orientation.EAST); break;
+                        case 5: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.TURN, Orientation.SOUTH); break;
+                        case 6: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.TURN); break;
+                        case 7: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.TURN, Orientation.WEST); break;
+                        case 8: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.FORK); break;
+                        case 9: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.FORK, Orientation.EAST); break;
+                        case 10: dragImg = Texture.getTextureTile(view.Color.WHITE, PipeType.FORK, Orientation.WEST); break;
+                        case 11: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.FORK, Orientation.SOUTH); break;
+                        case 12: dragImg = Texture.getTextureTile(Color.WHITE, PipeType.SOURCE); break;
+                        case 13: dragImg = Texture.getTextureTile(Special.SCREWS); break;
+
+                    }
+                    dragOffset[0] = e.getX() - (120 * xSource);
+                    dragOffset[1] = e.getY() - (120 * ySource);
+                }
+            }
+
             @Override
-            public void mouseReleased(MouseEvent e) {}
-            public void mouseClicked(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+                int xTarget = e.getX() / 120;
+                int yTarget = e.getY() / 120;
+
+                // On efface l'image de drag et on refait un nouveau panel.animation vierge
+                dragImg = null;
+                panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
+                panel.repaint();
+
+
+                // Cas où le joueur clique depuis la reserve
+                if (xSource > level.column() + 1 && ySource <= 6) {
+                    int id = ySource * 2 + (xSource - level.column() - 2);
+                    // Cas où le joueur lache sur une case du plateau
+                    if (xTarget < level.column() + 2 && yTarget < level.line() + 2) {
+                        // La case est une case de la bordure
+                        if (yTarget == 0 || yTarget == level.line() + 1 || xTarget == 0 || xTarget == level.column() + 1) {
+
+                            int orientation = -1;
+                            if (xTarget == 0 && yTarget != 0 && yTarget != level.line() + 1) {
+                                System.out.println("Droite");
+                                orientation = 1;
+                            } else if (xTarget == level.column() + 1 && yTarget != 0 && yTarget != level.line() + 1) {
+                                orientation = 3;
+                            } else if (yTarget == 0 && xTarget != 0 && xTarget != level.column() + 1) {
+                                orientation = 2;
+                            } else if (yTarget == level.line() + 1 && xTarget != 0 && xTarget != level.column() + 1) {
+                                orientation = 0;
+                            }
+
+                            if (id == 12) {
+                                level.getCurrentState()[yTarget][xTarget] = "R" + orientation;
+                            }
+                            panel.updateBackground();
+
+                        // La case est une case intérieure
+                        } else {
+                            switch (id) {
+                                case 0 : level.getCurrentState()[yTarget][xTarget] = "C0"; break;
+                                case 1 : level.getCurrentState()[yTarget][xTarget] = "O0"; break;
+                                case 2 : level.getCurrentState()[yTarget][xTarget] = "L0"; break;
+                                case 3 : level.getCurrentState()[yTarget][xTarget] = "L1"; break;
+                                case 4 : level.getCurrentState()[yTarget][xTarget] = "T1"; break;
+                                case 5 : level.getCurrentState()[yTarget][xTarget] = "T2"; break;
+                                case 6 : level.getCurrentState()[yTarget][xTarget] = "T0"; break;
+                                case 7 : level.getCurrentState()[yTarget][xTarget] = "T3"; break;
+                                case 8 : level.getCurrentState()[yTarget][xTarget] = "F0"; break;
+                                case 9 : level.getCurrentState()[yTarget][xTarget] = "F1"; break;
+                                case 10 : level.getCurrentState()[yTarget][xTarget] = "F3"; break;
+                                case 11 : level.getCurrentState()[yTarget][xTarget] = "F2"; break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX() / 120;
+                int y = e.getY() / 120;
+
+                if ((x == 0 || x == level.column() + 1 || y == 0 || y == level.line() + 1) && x < level.column() + 2 && y < level.line() + 2){
+                    if (!level.getCurrentState()[y][x].equals("X")) {
+                        switch (level.getCurrentState()[y][x].charAt(0)) {
+                            case 'R' -> level.getCurrentState()[y][x] = "G" + level.getCurrentState()[y][x].charAt(1);
+                            case 'G' -> level.getCurrentState()[y][x] = "B" + level.getCurrentState()[y][x].charAt(1);
+                            case 'B' -> level.getCurrentState()[y][x] = "Y" + level.getCurrentState()[y][x].charAt(1);
+                            case 'Y' -> level.getCurrentState()[y][x] = "R" + level.getCurrentState()[y][x].charAt(1);
+                        }
+                        panel.updateBackground();
+                        panel.repaint();
+                    }
+                }
+
+            }
             public void mouseEntered(MouseEvent e) {}
             public void mouseExited(MouseEvent e) {}
         });
 
         panel.addMouseMotionListener(new MouseMotionListener() {
             @Override
-            public void mouseDragged(MouseEvent e) {}
+            public void mouseDragged(MouseEvent e) {
+                // On déplace dragImg à l'endroit où le pointeur se situe pendant le drag
+                if (dragImg != null) {
+                    panel.setAnimation(new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB));
+                    Graphics g = panel.getAnimation().createGraphics();
+                    g.drawImage(dragImg, e.getX() - dragOffset[0], e.getY() - dragOffset[1], null);
+                }
+                panel.repaint();
+            }
             public void mouseMoved(MouseEvent e) {}
         });
 
