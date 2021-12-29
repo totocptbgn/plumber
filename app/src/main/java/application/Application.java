@@ -30,7 +30,7 @@ public class Application extends JFrame {
 		LevelController controller1 = new LevelController(panelLevel1);
 		*/
 
-		DrawPanelEdition panelEdition = new DrawPanelEdition(2, mainFrame);
+		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
 		new EditionController(panelEdition);
 		mainFrame.setPanel(panelEdition);
 

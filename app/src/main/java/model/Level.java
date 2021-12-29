@@ -15,12 +15,12 @@ public class Level {
 	private String colorState[][];				// Listes des couleurs des tuyaux du plateau
 	private int ressources[]; 					// Liste des tuyaux : C0, O0, L0, L1, T1, T2, T0, T3, F0, F1, F3, F2
 
-	public Level(int id, boolean editionMode) {
+	public Level(String filename, boolean editionMode) {
 		this.editionMode = editionMode;
 
 		// Contruction de currentState en lisant le fichier de niveau
 		try {
-			Scanner s = new Scanner(new File("src/main/java/data/level" + id + ".p"));
+			Scanner s = new Scanner(new File("src/main/java/data/" + filename + ".p"));
 			int height = s.nextInt();
 			int width = s.nextInt();
 

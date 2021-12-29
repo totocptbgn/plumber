@@ -198,10 +198,8 @@ public class EditionController {
                     if (xTarget < level.column() + 2 && yTarget < level.line() + 2) {
                         // La case est une case de la bordure
                         if (yTarget == 0 || yTarget == level.line() + 1 || xTarget == 0 || xTarget == level.column() + 1) {
-
                             int orientation = -1;
                             if (xTarget == 0 && yTarget != 0 && yTarget != level.line() + 1) {
-                                System.out.println("Droite");
                                 orientation = 1;
                             } else if (xTarget == level.column() + 1 && yTarget != 0 && yTarget != level.line() + 1) {
                                 orientation = 3;
@@ -231,6 +229,13 @@ public class EditionController {
                                 case 9 : level.getCurrentState()[yTarget][xTarget] = "F1"; break;
                                 case 10 : level.getCurrentState()[yTarget][xTarget] = "F3"; break;
                                 case 11 : level.getCurrentState()[yTarget][xTarget] = "F2"; break;
+                                case 13 : {
+                                    if (level.getCurrentState()[yTarget][xTarget].equals(".")) {
+                                        level.getCurrentState()[yTarget][xTarget] = "*";
+                                    } else if (level.getCurrentState()[yTarget][xTarget].charAt(0) != '*') {
+                                        level.getCurrentState()[yTarget][xTarget] = '*' + level.getCurrentState()[yTarget][xTarget];
+                                    }
+                                }
                             }
                         }
                     }

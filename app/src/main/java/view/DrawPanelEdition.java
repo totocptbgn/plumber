@@ -17,12 +17,12 @@ public class DrawPanelEdition extends JPanel{
     private JButton [] buttons;                 // Boutons de la menu bar, accessible par le controller par un getter
     private JFrame frame;                       // Frame dans lequel le JPanel s'affiche
 
-    public DrawPanelEdition(int id, JFrame frame) {
-        this.level = new Level(id, true);
+    public DrawPanelEdition(String filename, JFrame frame) {
+        this.level = new Level(filename, true);
         this.frame = frame;
         updateFrameSize();
 
-        frame.setTitle("Plumber - Level " + id + " - Edition Mode");
+        frame.setTitle("Plumber - Level : " + filename + " - Edition Mode");
 
         // Construction de la menu bar
         JMenuBar menuBar = new JMenuBar();
@@ -313,6 +313,9 @@ public class DrawPanelEdition extends JPanel{
                         y = i * 120;
                         BufferedImage tile = Texture.getTextureTile(Special.SCREWS);
                         g.drawImage(tile, x, y, null);
+                        if (state[i][j].equals("*")) {
+                            continue;
+                        }
                         chr++;
                     }
                     PipeType pipeType = null;

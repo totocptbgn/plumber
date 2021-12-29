@@ -19,14 +19,14 @@ public class DrawPanelLevel extends JPanel {
 	private JButton [] buttons;        			// Boutons de la menu bar, accessible par le controller par un getter
 	private UndoManager edits;					// Edit Manager, accessible
 
-	public DrawPanelLevel(int id, JFrame frame) {
-		this.level = new Level(id, false);
+	public DrawPanelLevel(String filename, JFrame frame) {
+		this.level = new Level(filename, false);
 		int w = (level.column() + 4) * 120;
 		int h = Math.max(level.line() + 2, 6) * 120;
 
 		this.setPreferredSize(new Dimension(w, h));
 		this.animation = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-		frame.setTitle("Plumber - Level " + id);
+		frame.setTitle("Plumber - Level : " + filename);
 
 		// Création de l'image de backgroud
 		this.background = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
