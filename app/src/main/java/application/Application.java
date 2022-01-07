@@ -20,12 +20,11 @@ public class Application extends JFrame {
 
 	public static void main(String[] args) throws IOException {
 		Application mainFrame = new Application();
-		mainFrame.setTitle("Plumber");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);
 
 		/*
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel(2, mainFrame);
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level2", mainFrame);
 		mainFrame.setPanel(panelLevel1);
 		LevelController controller1 = new LevelController(panelLevel1);
 		*/

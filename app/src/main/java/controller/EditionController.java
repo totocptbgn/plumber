@@ -1,8 +1,8 @@
 package controller;
 
 import model.Level;
-import view.*;
 import view.Color;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -177,7 +177,67 @@ public class EditionController {
                     }
                     dragOffset[0] = e.getX() - (120 * xSource);
                     dragOffset[1] = e.getY() - (120 * ySource);
+
+
+
+                    // Cas où on clique sur une casse du plateau non vide
+                } else if (xSource < level.column() + 2 && ySource < level.line() + 2 && !level.getCurrentState()[ySource][xSource].equals(".") && !level.getCurrentState()[ySource][xSource].equals("X")) {
+
+                    // Construction de l'image de drag
+                    PipeType pipeType = null;
+                    Orientation orientation = null;
+                    Color color = Color.WHITE;
+                    boolean source = false;
+
+                    dragImg = new BufferedImage(120, 120, BufferedImage.TYPE_INT_ARGB);
+
+                    int index = 0;
+                    if (level.getCurrentState()[ySource][xSource].charAt(0) == '*') {
+                        index++;
+                    }
+
+                    switch (level.getCurrentState()[ySource][xSource].charAt(index)) {
+                        case 'L' : pipeType = PipeType.LINE; break;
+                        case 'O' : {
+                            pipeType = PipeType.OVER;
+                            dragImg.createGraphics().drawImage(Texture.getTextureTile(Color.WHITE, PipeType.LINE), 0, 0, null); // TODO: Prendre en compte la couleur
+                            break;
+                        }
+                        case 'T' : pipeType = PipeType.TURN; break;
+                        case 'F' : pipeType = PipeType.FORK; break;
+                        case 'C' : pipeType = PipeType.CROSS; break;
+                        case 'R' : pipeType = PipeType.SOURCE; color = Color.RED; source = true; break;
+                        case 'G' : pipeType = PipeType.SOURCE; color = Color.GREEN; source = true; break;
+                        case 'B' : pipeType = PipeType.SOURCE; color = Color.BLUE; source = true; break;
+                        case 'Y' : pipeType = PipeType.SOURCE; color = Color.YELLOW; source = true; break;
+                    }
+                    index++;
+
+                    switch (level.getCurrentState()[ySource][xSource].charAt(index)) {
+                        case '0' : orientation = Orientation.NORTH; break;
+                        case '1' : orientation = Orientation.EAST; break;
+                        case '2' : orientation = Orientation.SOUTH; break;
+                        case '3' : orientation = Orientation.WEST; break;
+                    }
+
+                    dragImg.createGraphics().drawImage(Texture.getTextureTile(color, pipeType, orientation), 0, 0, null); // TODO: Prendre en compte la couleur
+                    dragOffset[0] = e.getX() - (120 * xSource);
+                    dragOffset[1] = e.getY() - (120 * ySource);
+
+                    // Sauvegarde de la pièce dans dragSave au cas où l'action est annulée
+                    dragSave = level.getCurrentState()[ySource][xSource];
+                    if (dragSave.charAt(0) == '*') {
+                        dragSave = dragSave.substring(1);
+                    }
+
+                    // On vide la case d'origine pendant le drag
+                    if (source) {
+                        level.getCurrentState()[ySource][xSource] = "X";
+                    } else {
+                        level.getCurrentState()[ySource][xSource] = ".";
+                    }
                 }
+                panel.updateBackground();
             }
 
             @Override
@@ -193,24 +253,25 @@ public class EditionController {
 
                 // Cas où le joueur clique depuis la reserve
                 if (xSource > level.column() + 1 && ySource <= 6) {
+
                     int id = ySource * 2 + (xSource - level.column() - 2);
+
                     // Cas où le joueur lache sur une case du plateau
                     if (xTarget < level.column() + 2 && yTarget < level.line() + 2) {
+
                         // La case est une case de la bordure
                         if (yTarget == 0 || yTarget == level.line() + 1 || xTarget == 0 || xTarget == level.column() + 1) {
-                            int orientation = -1;
-                            if (xTarget == 0 && yTarget != 0 && yTarget != level.line() + 1) {
-                                orientation = 1;
-                            } else if (xTarget == level.column() + 1 && yTarget != 0 && yTarget != level.line() + 1) {
-                                orientation = 3;
-                            } else if (yTarget == 0 && xTarget != 0 && xTarget != level.column() + 1) {
-                                orientation = 2;
-                            } else if (yTarget == level.line() + 1 && xTarget != 0 && xTarget != level.column() + 1) {
-                                orientation = 0;
-                            }
-
                             if (id == 12) {
-                                level.getCurrentState()[yTarget][xTarget] = "R" + orientation;
+                                if (xTarget == 0 && yTarget != 0 && yTarget != level.line() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "R" + 1;
+                                } else if (xTarget == level.column() + 1 && yTarget != 0 && yTarget != level.line() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "R" + 3;
+                                } else if (yTarget == 0 && xTarget != 0 && xTarget != level.column() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "R" + 2;
+                                } else if (yTarget == level.line() + 1 && xTarget != 0 && xTarget != level.column() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "R" + 0;
+                                }
+
                             }
                             panel.updateBackground();
 
@@ -239,27 +300,66 @@ public class EditionController {
                             }
                         }
                     }
+
                 }
-            }
 
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX() / 120;
-                int y = e.getY() / 120;
-
-                if ((x == 0 || x == level.column() + 1 || y == 0 || y == level.line() + 1) && x < level.column() + 2 && y < level.line() + 2){
-                    if (!level.getCurrentState()[y][x].equals("X")) {
-                        switch (level.getCurrentState()[y][x].charAt(0)) {
-                            case 'R' -> level.getCurrentState()[y][x] = "G" + level.getCurrentState()[y][x].charAt(1);
-                            case 'G' -> level.getCurrentState()[y][x] = "B" + level.getCurrentState()[y][x].charAt(1);
-                            case 'B' -> level.getCurrentState()[y][x] = "Y" + level.getCurrentState()[y][x].charAt(1);
-                            case 'Y' -> level.getCurrentState()[y][x] = "R" + level.getCurrentState()[y][x].charAt(1);
+                // Cas où on déplace depuis la bordure du plateau
+                else if ((xSource == 0 || xSource == level.column() + 1 || ySource == 0 || ySource == level.line() + 1) && xSource < level.column() + 2 && ySource < level.line() + 2) {
+                    if (dragSave != null) {
+                        // Cas où on glisse vers l'interieur du plateau
+                        if (xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1) {
+                            level.getCurrentState()[ySource][xSource] = dragSave;
                         }
+                        // Cas où on glisse jusqu'à une case de la bordure (la case est donc une source)
+                        else if ((xTarget == 0 || xTarget == level.column() + 1 || yTarget == 0 || yTarget == level.line() + 1) && xTarget < level.column() + 2 && yTarget < level.line() + 2) {
+
+                            // Si c'est la même case, alors on change la couleur de la source
+                            if (xSource == xTarget && ySource == yTarget) {
+                                switch (dragSave.charAt(0)) {
+                                    case 'R' -> level.getCurrentState()[ySource][xSource] = "G" + dragSave.charAt(1);
+                                    case 'G' -> level.getCurrentState()[ySource][xSource] = "B" + dragSave.charAt(1);
+                                    case 'B' -> level.getCurrentState()[ySource][xSource] = "Y" + dragSave.charAt(1);
+                                    case 'Y' -> level.getCurrentState()[ySource][xSource] = "R" + dragSave.charAt(1);
+                                }
+                            } else {
+                                char color = dragSave.charAt(0);
+                                if (xTarget == 0 && yTarget != 0 && yTarget != level.line() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "" + color + 1;
+                                } else if (xTarget == level.column() + 1 && yTarget != 0 && yTarget != level.line() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "" + color + 3;
+                                } else if (yTarget == 0 && xTarget != 0 && xTarget != level.column() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "" + color + 2;
+                                } else if (yTarget == level.line() + 1 && xTarget != 0 && xTarget != level.column() + 1) {
+                                    level.getCurrentState()[yTarget][xTarget] = "" + color + 0;
+                                }
+                            }
+                        }
+                        dragSave = null;
                         panel.updateBackground();
-                        panel.repaint();
                     }
                 }
 
+                // Cas où on déplace depuis l'intérieur du plateau
+                else if (xSource > 0 && ySource > 0 && xSource < level.column() + 1 && ySource < level.line() + 1) {
+                    // Vérification de la variable de sauvegarde
+                    if (dragSave != null) {
+                        // Cas où le joueur a drag vers une case de la reserve ou en dehors du plateau (vers une case autre que le plateau)
+                        if (!(xTarget > 0 && yTarget > 0 && xTarget < level.column() + 1 && yTarget < level.line() + 1)) {
+                            // On ne fait, rien : on vide juste la valeur de drag, la pièce est supprimée
+                            dragSave = null;
+                        }
+
+                        // Cas où le joueur a drag vers une autre case du plateau
+                        else if (xTarget < level.column() + 1 && yTarget < level.line() + 1) {
+                            level.getCurrentState()[yTarget][xTarget] = dragSave;
+                            dragSave = null;
+                        }
+                    }
+
+                }
             }
+
+            public void mouseClicked(MouseEvent e) {}
             public void mouseEntered(MouseEvent e) {}
             public void mouseExited(MouseEvent e) {}
         });
@@ -278,7 +378,7 @@ public class EditionController {
             public void mouseMoved(MouseEvent e) {}
         });
 
-        // Close window confirmation
+        // Confirmation de la fermeture de la fenêtre
         panel.getFrame().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
                 int result = JOptionPane.showConfirmDialog(panel.getFrame(),
