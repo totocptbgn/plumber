@@ -133,6 +133,7 @@ public class Level {
 				colorState[source[0]][source[1]]=color;
 				int nextX = -1;
 				int nextY = -1;
+				// On détermine les coordonnées du prochain tuyau
 				if(currentState[source[0]][source[1]].contains("0")) {
 					nextX = source[0]-1;
 					nextY = source[1];
@@ -173,7 +174,131 @@ public class Level {
 			// Est-ce que la couleur est déjà établi pour ce tuyau?
 			if(!colorState[current[0]][current[1]].equals("")) return;
 			else {
-				
+				colorState[current[0]][current[1]]=color; // On donne la couleur au tuyau
+				if(currentState[current[0]][current[1]].contains("L")) {
+					if(currentState[current[0]][current[1]].contains("0")) {
+						if(current[0] == previous[0]-1 && current[1] == previous[1])
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+						else
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+					}
+					else {
+						if(current[0] == previous[0] && current[1] == previous[1]-1)
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						else
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+					}
+					return;
+				}
+				if(currentState[current[0]][current[1]].contains("T")) {
+					if(currentState[current[0]][current[1]].contains("0")) {
+						if(current[0] == previous[0]+1 && current[1] == previous[1])
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						else
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+					}
+					else if(currentState[current[0]][current[1]].contains("1")) {
+						if(current[0] == previous[0]-1 && current[1] == previous[1])
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						else
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+					}
+					else if(currentState[current[0]][current[1]].contains("2")) {
+						if(current[0] == previous[0]-1 && current[1] == previous[1])
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						else
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+					}
+					else if(currentState[current[0]][current[1]].contains("3")) {
+						if(current[0] == previous[0]+1 && current[1] == previous[1])
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						else
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+					}
+					return;
+				}
+				if(currentState[current[0]][current[1]].contains("F")) {
+					if(currentState[current[0]][current[1]].contains("0")) {
+						if(current[0] == previous[0]-1 && current[1] == previous[1]) { // le tuyau précédent est au sud
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						}
+						else if(current[0] == previous[0] && current[1] == previous[1]-1) { // le tuyau précédent est à l'est
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+						}
+						else if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						}
+					}
+					else if(currentState[current[0]][current[1]].contains("1")) {
+						if(current[0] == previous[0]-1 && current[1] == previous[1]) { // le tuyau précédent est au sud
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						}
+						else if(current[0] == previous[0] && current[1] == previous[1]-1) { // le tuyau précédent est à l'est
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						}
+						else if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						}
+					}
+					else if(currentState[current[0]][current[1]].contains("2")) {
+						if(current[0] == previous[0]-1 && current[1] == previous[1]) { // le tuyau précédent est au sud
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						}
+						else if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						}
+						else if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+						}
+					}
+					else if(currentState[current[0]][current[1]].contains("3")) {
+						if(current[0] == previous[0] && current[1] == previous[1]-1) { // le tuyau précédent est à l'est
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						}
+						else if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
+							colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						}
+						else if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
+							colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+							colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						}
+					}
+					return;
+				}
+				if(currentState[current[0]][current[1]].contains("C")) {
+					if(current[0] == previous[0]-1 && current[1] == previous[1]) { // le tuyau précédent est au sud
+						colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+						colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+						colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+					}
+					else if(current[0] == previous[0] && current[1] == previous[1]-1) { // le tuyau précédent est à l'est
+						colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+						colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+						colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+					}
+					else if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
+						colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+						colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+					}
+					else if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
+						colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+						colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+						colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+					}
+					return;
+				}
 			}
 		}
 	}
@@ -218,10 +343,40 @@ public class Level {
 			}
 		}
 		if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
-			
+			if(currentState[current[0]][current[1]].contains("L")) {
+				if(currentState[current[0]][current[1]].contains("1"))
+					return false;
+				else return true;
+			}
+			if(currentState[current[0]][current[1]].contains("T")) {
+				if(currentState[current[0]][current[1]].contains("1") ||
+						currentState[current[0]][current[1]].contains("2"))
+					return false;
+				else return true;
+			}
+			if(currentState[current[0]][current[1]].contains("F")) {
+				if(currentState[current[0]][current[1]].contains("1"))
+					return false;
+				else return true;
+			}
 		}
-		if(current[0] == previous[0] && current[1]+1 == previous[1]) { // le tuyau précédent est à l'ouest
-			
+		if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
+			if(currentState[current[0]][current[1]].contains("L")) {
+				if(currentState[current[0]][current[1]].contains("0"))
+					return false;
+				else return true;
+			}
+			if(currentState[current[0]][current[1]].contains("T")) {
+				if(currentState[current[0]][current[1]].contains("0") ||
+						currentState[current[0]][current[1]].contains("1"))
+					return false;
+				else return true;
+			}
+			if(currentState[current[0]][current[1]].contains("F")) {
+				if(currentState[current[0]][current[1]].contains("0"))
+					return false;
+				else return true;
+			}
 		}
 		return false;
 	}
