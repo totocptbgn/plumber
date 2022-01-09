@@ -40,15 +40,15 @@ public class Application extends JFrame {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);
 
-		/*
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level2", mainFrame);
+		
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level3", mainFrame);
 		mainFrame.setPanel(panelLevel1);
 		LevelController controller1 = new LevelController(panelLevel1);
-		*/
+		
 
-		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
+		/*DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
 		new EditionController(panelEdition);
-		mainFrame.setPanel(panelEdition);
+		mainFrame.setPanel(panelEdition);*/
 		
 		mainFrame.setVisible(true);
 	}
