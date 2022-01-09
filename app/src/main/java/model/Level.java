@@ -2,6 +2,7 @@ package model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,7 @@ public class Level {
 	private String currentState[][];			// Listes des états des tuyaux du plateau
 	private String colorState[][];				// Listes des couleurs des tuyaux du plateau
 	private int ressources[]; 					// Liste des tuyaux : C0, O0, L0, L1, T1, T2, T0, T3, F0, F1, F3, F2
+	private ArrayList<Boolean> pipeEntriesConnected;
 
 	public Level(String filename, boolean editionMode) {
 		this.editionMode = editionMode;
@@ -96,20 +98,27 @@ public class Level {
 	}
 
 	public void updateColor() {
-		// TODO: remplir colorState
 		this.colorState = new String[this.currentState.length][this.currentState[0].length];
 		for(int i = 0; i < colorState.length; i++)
 			for(int j = 0; j < colorState[0].length; j++)
 				colorState[i][j]="";
 		
 		ArrayList<Integer[]> toCheck = new ArrayList<Integer[]>();
+		this.pipeEntriesConnected = new ArrayList<Boolean>();
 		// On enregistre les points de départs depuis la première et la dernière ligne
 		for(int i = 0; i < currentState.length; i+=currentState.length-1) {
 			for(int j = 1; j < currentState[0].length-1; j++) {
 				// Est-ce que la tile hors des cases
 				if(currentState[i][j].equals("X"))
 					continue;
-				else toCheck.add(new Integer[]{i, j});
+				else{
+					if(currentState[i][j].contains("R")) colorState[i][j] = "Red";
+					else if(currentState[i][j].contains("G")) colorState[i][j] = "Green";
+					else if(currentState[i][j].contains("B")) colorState[i][j] = "Blue";
+					else if(currentState[i][j].contains("Y")) colorState[i][j] = "Yellow";
+					toCheck.add(new Integer[]{i, j});
+					pipeEntriesConnected.add(false);
+				}
 			}
 		}
 		// On enregistre les points de départs depuis la première et la dernière colonne
@@ -118,7 +127,14 @@ public class Level {
 				// Est-ce que la tile est hors des cases
 				if(currentState[i][j].equals("X"))
 					continue;
-				else toCheck.add(new Integer[]{i, j});
+				else{
+					if(currentState[i][j].contains("R")) colorState[i][j] = "Red";
+					else if(currentState[i][j].contains("G")) colorState[i][j] = "Green";
+					else if(currentState[i][j].contains("B")) colorState[i][j] = "Blue";
+					else if(currentState[i][j].contains("Y")) colorState[i][j] = "Yellow";
+					toCheck.add(new Integer[]{i, j});
+					pipeEntriesConnected.add(false);
+				}
 			}
 		}
 		
@@ -130,7 +146,7 @@ public class Level {
 				else if(currentState[source[0]][source[1]].contains("G")) color = "Green";
 				else if(currentState[source[0]][source[1]].contains("B")) color = "Blue";
 				else if(currentState[source[0]][source[1]].contains("Y")) color = "Yellow";
-				colorState[source[0]][source[1]]=color;
+				
 				int nextX = -1;
 				int nextY = -1;
 				// On détermine les coordonnées du prochain tuyau
@@ -166,7 +182,71 @@ public class Level {
 		if(currentState[current[0]][current[1]].equals(".")) return;
 		// Cas particulier du tuyau OVER
 		if(currentState[current[0]][current[1]].contains("O")) {
-			
+			if(current[0] == previous[0]-1 && current[1] == previous[1]) { // le tuyau précédent est au sud
+				if(colorState[current[0]][current[1]].equals("")) {
+					colorState[current[0]][current[1]] = color+" ";
+					colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+				}
+				else if(colorState[current[0]][current[1]].contains("Red ") ||
+						colorState[current[0]][current[1]].contains("Blue ") ||
+						colorState[current[0]][current[1]].contains("Green ") ||
+						colorState[current[0]][current[1]].contains("Yellow ")) {
+					return;
+				}
+				else {
+					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorPipe(color, current, new Integer[]{current[0]-1, current[1]});
+				}
+			}
+			else if(current[0] == previous[0] && current[1] == previous[1]-1) { // le tuyau précédent est à l'est
+				if(colorState[current[0]][current[1]].equals("")) {
+					colorState[current[0]][current[1]] = " "+color;
+					colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+				}
+				else if(colorState[current[0]][current[1]].contains(" Red") ||
+						colorState[current[0]][current[1]].contains(" Blue") ||
+						colorState[current[0]][current[1]].contains(" Green") ||
+						colorState[current[0]][current[1]].contains(" Yellow")) {
+					return;
+				}
+				else {
+					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorPipe(color, current, new Integer[]{current[0], current[1]-1});
+				}
+			}
+			else if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
+				if(colorState[current[0]][current[1]].equals("")) {
+					colorState[current[0]][current[1]] = color+" ";
+					colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+				}
+				else if(colorState[current[0]][current[1]].contains("Red ") ||
+						colorState[current[0]][current[1]].contains("Blue ") ||
+						colorState[current[0]][current[1]].contains("Green ") ||
+						colorState[current[0]][current[1]].contains("Yellow ")) {
+					return;
+				}
+				else {
+					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorPipe(color, current, new Integer[]{current[0]+1, current[1]});
+				}
+			}
+			else if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
+				if(colorState[current[0]][current[1]].equals("")) {
+					colorState[current[0]][current[1]] = " "+color;
+					colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+				}
+				else if(colorState[current[0]][current[1]].contains(" Red") ||
+						colorState[current[0]][current[1]].contains(" Blue") ||
+						colorState[current[0]][current[1]].contains(" Green") ||
+						colorState[current[0]][current[1]].contains(" Yellow")) {
+					return;
+				}
+				else {
+					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorPipe(color, current, new Integer[]{current[0], current[1]+1});
+				}
+			}
+			return;
 		}
 		// Est-ce que le tuyau est connecté au précédent ?
 		else if(!arePipesConnected(previous, current)) return;
@@ -382,7 +462,6 @@ public class Level {
 	}
 
 	public boolean isCompleted() {
-		// TODO: detecter la victoire
 		return false;
 	}
 
