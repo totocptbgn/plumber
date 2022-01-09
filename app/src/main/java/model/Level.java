@@ -55,18 +55,18 @@ public class Level {
 				String tile = currentState[i][j];
 				if (!tile.equals(".") && tile.charAt(0) != '*') {
 					switch (tile) {
-						case "C0" : ressources[0]++; break;
-						case "O0" : ressources[1]++; break;
-						case "L0" : ressources[2]++; break;
-						case "L1" : ressources[3]++; break;
-						case "T1" : ressources[4]++; break;
-						case "T2" : ressources[5]++; break;
-						case "T0" : ressources[6]++; break;
-						case "T3" : ressources[7]++; break;
-						case "F0" : ressources[8]++; break;
-						case "F1" : ressources[9]++; break;
-						case "F3" : ressources[10]++; break;
-						case "F2" : ressources[11]++; break;
+					case "C0" : ressources[0]++; break;
+					case "O0" : ressources[1]++; break;
+					case "L0" : ressources[2]++; break;
+					case "L1" : ressources[3]++; break;
+					case "T1" : ressources[4]++; break;
+					case "T2" : ressources[5]++; break;
+					case "T0" : ressources[6]++; break;
+					case "T3" : ressources[7]++; break;
+					case "F0" : ressources[8]++; break;
+					case "F1" : ressources[9]++; break;
+					case "F3" : ressources[10]++; break;
+					case "F2" : ressources[11]++; break;
 					}
 					currentState[i][j] = ".";
 				}
@@ -102,7 +102,7 @@ public class Level {
 		for(int i = 0; i < colorState.length; i++)
 			for(int j = 0; j < colorState[0].length; j++)
 				colorState[i][j]="";
-		
+
 		this.toCheck = new ArrayList<Integer[]>();
 		this.pipeEntriesConnected = new ArrayList<Boolean>();
 		// On enregistre les points de départs depuis la première et la dernière ligne
@@ -137,49 +137,55 @@ public class Level {
 				}
 			}
 		}
-		
+
 		// On part de chaque source pour colorer les tuyaux
 		for(Integer[] source : toCheck) {
 			String color = "";
-			if(colorState[source[0]][source[1]].equals("")) {
-				if(currentState[source[0]][source[1]].contains("R")) color = "Red";
-				else if(currentState[source[0]][source[1]].contains("G")) color = "Green";
-				else if(currentState[source[0]][source[1]].contains("B")) color = "Blue";
-				else if(currentState[source[0]][source[1]].contains("Y")) color = "Yellow";
-				
-				int nextX = -1;
-				int nextY = -1;
-				// On détermine les coordonnées du prochain tuyau
-				if(currentState[source[0]][source[1]].contains("0")) {
-					nextX = source[0]-1;
-					nextY = source[1];
-				}
-				else if(currentState[source[0]][source[1]].contains("1")) {
-					nextX = source[0];
-					nextY = source[1]+1;
-				}
-				else if(currentState[source[0]][source[1]].contains("2")) {
-					nextX = source[0]+1;
-					nextY = source[1];
-				}
-				else if(currentState[source[0]][source[1]].contains("3")) {
-					nextX = source[0]-1;
-					nextY = source[1];
-				}
-				if(nextX<1||nextX>currentState.length-1 ||
-						nextY<1||nextY>currentState[0].length-1) {
-					continue;
-					
-				}
-				boolean connected = colorPipe(color, source, new Integer[]{nextX, nextY});
-				if(connected) {
-					setPipeAsConnected(source);
-				}
+			if(currentState[source[0]][source[1]].contains("R")) color = "Red";
+			else if(currentState[source[0]][source[1]].contains("G")) color = "Green";
+			else if(currentState[source[0]][source[1]].contains("B")) color = "Blue";
+			else if(currentState[source[0]][source[1]].contains("Y")) color = "Yellow";
+
+			int nextX = -1;
+			int nextY = -1;
+			// On détermine les coordonnées du prochain tuyau
+			if(currentState[source[0]][source[1]].contains("0")) {
+				nextX = source[0]-1;
+				nextY = source[1];
 			}
-			else continue;
+			else if(currentState[source[0]][source[1]].contains("1")) {
+				nextX = source[0];
+				nextY = source[1]+1;
+			}
+			else if(currentState[source[0]][source[1]].contains("2")) {
+				nextX = source[0]+1;
+				nextY = source[1];
+			}
+			else if(currentState[source[0]][source[1]].contains("3")) {
+				nextX = source[0]-1;
+				nextY = source[1];
+			}
+			if(nextX<1||nextX>currentState.length-1 ||
+					nextY<1||nextY>currentState[0].length-1) {
+				continue;
+
+			}
+			boolean connected = colorPipe(color, source, new Integer[]{nextX, nextY});
+			if(connected) {
+				setPipeAsConnected(source);
+			}
 		}
+		for(int i = 0; i < colorState.length; i++) {
+			for(int j = 0; j < colorState[0].length; j++) {
+				if(colorState[i][j].length()>0)
+					System.out.print(colorState[i][j].charAt(0));
+				else System.out.print(" ");
+			}
+			System.out.println();
+		}
+		System.out.println("stop");
 	}
-	
+
 	public boolean colorPipe(String color, Integer[] previous, Integer[] current) {
 		// Est-ce qu'il n'y a pas de tuyaux ?
 		if(currentState[current[0]][current[1]].equals(".") ||
@@ -406,7 +412,7 @@ public class Level {
 		}
 		return false;
 	}
-	
+
 	private boolean arePipesConnected(Integer[] previous, Integer[] current) {
 		if(currentState[current[0]][current[1]].contains("C"))
 			return true;
@@ -484,7 +490,7 @@ public class Level {
 		}
 		return false;
 	}
-	
+
 	private void setPipeAsConnected(Integer[] current) {
 		for(int i = 0; i<toCheck.size(); i++)
 			if(current[0]==toCheck.get(i)[0]&&current[1]==toCheck.get(i)[1]) {
@@ -499,7 +505,7 @@ public class Level {
 			if(!b.booleanValue())
 				return false;
 		}
-			
+
 		return true;
 	}
 
