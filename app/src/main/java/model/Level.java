@@ -162,8 +162,8 @@ public class Level {
 				nextY = source[1];
 			}
 			else if(currentState[source[0]][source[1]].contains("3")) {
-				nextX = source[0]-1;
-				nextY = source[1];
+				nextX = source[0];
+				nextY = source[1]-1;
 			}
 			if(nextX<1||nextX>currentState.length-1 ||
 					nextY<1||nextY>currentState[0].length-1) {
