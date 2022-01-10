@@ -175,8 +175,8 @@ public class Level {
 				setPipeAsConnected(source);
 			}
 		}
-		isCompleted();
-		/*for(int i = 0; i < colorState.length; i++) {
+		System.out.println(isCompleted());
+		for(int i = 0; i < colorState.length; i++) {
 			for(int j = 0; j < colorState[0].length; j++) {
 				if(colorState[i][j].length()>0)
 					System.out.print(colorState[i][j].charAt(0));
@@ -184,7 +184,7 @@ public class Level {
 			}
 			System.out.println();
 		}
-		System.out.println("stop");*/
+		System.out.println("stop");
 	}
 
 	public boolean colorPipe(String color, Integer[] previous, Integer[] current) {
@@ -514,14 +514,10 @@ public class Level {
 	}
 
 	public boolean isCompleted() {
-		System.out.println(pipeEntriesConnected.size());
-		for(int i = 0; i<pipeEntriesConnected.size(); i++) {
-			System.out.println(pipeEntriesConnected.get(i)+" "+toCheck.get(i)[0]+"-"+toCheck.get(i)[1]);
-		}
-		/*for(Boolean b: pipeEntriesConnected) {
+		for(Boolean b: pipeEntriesConnected) {
 			if(!b.booleanValue())
 				return false;
-		}*/
+		}
 
 		return true;
 	}

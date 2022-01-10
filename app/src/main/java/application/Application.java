@@ -41,7 +41,7 @@ public class Application extends JFrame {
 		mainFrame.setResizable(false);
 
 		
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level3", mainFrame);
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level1", mainFrame);
 		mainFrame.setPanel(panelLevel1);
 		LevelController controller1 = new LevelController(panelLevel1);
 		
