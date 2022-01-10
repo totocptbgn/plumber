@@ -12,6 +12,7 @@ import controller.MenuController;
 
 public class MenuPanel extends JPanel{
 	private JPanel mainMenu, levelSelect, editedLevelsSelect;
+	private int idMenuShowing;
 	public MenuPanel() {
 		mainMenu = new JPanel();
 		levelSelect = new JPanel();
@@ -28,6 +29,7 @@ public class MenuPanel extends JPanel{
 		
 		this.add(mainMenu);
 		this.add(levelSelect);
+		this.add(editedLevelsSelect);
 	}
 
 	private void createMainMenu(MenuController controller) {
@@ -44,9 +46,16 @@ public class MenuPanel extends JPanel{
 			mainMenu.add(Box.createHorizontalGlue());
 		
 		// Bouton parametres
-		JButton parameters = new JButton("Paramètres");
-		controller.setButtonAction(parameters);
-		mainMenu.add(parameters);
+		JButton editedLevels = new JButton("Niveaux persos");
+		controller.setButtonAction(editedLevels);
+		mainMenu.add(editedLevels);
+		
+		for(int i = 0; i < 5; i++)
+			mainMenu.add(Box.createHorizontalGlue());
+		
+		JButton editing = new JButton("Edition de niveaux");
+		controller.setButtonAction(editing);
+		mainMenu.add(editing);
 		
 		for(int i = 0; i < 5; i++)
 			mainMenu.add(Box.createHorizontalGlue());
@@ -79,20 +88,52 @@ public class MenuPanel extends JPanel{
 				i++;
 			}
 		}
+		for(int j = 0; j < 74; j++)
+			levelSelect.add(Box.createHorizontalGlue());
+		JButton b = new JButton("Retour");
+		controller.setButtonAction(b);
+		levelSelect.add(b);
 	}
 	
 	private void createEditedLevelsMenu(MenuController controller) {
-		
-		
+		editedLevelsSelect.setLayout(new GridLayout(0,7));
+		for(int j = 0; j < 8; j++)
+			editedLevelsSelect.add(Box.createHorizontalGlue());
+		File folder = new File("src/main/java/data");
+		File[] listOfFiles = folder.listFiles();
+		int i = 1;
+		for(File file : listOfFiles) {
+			if(file.isFile() && file.getName().substring(file.getName().length()-2).equals(".p") && !file.getName().contains("level")) {
+				JButton b = new JButton(file.getName());
+				controller.setButtonAction(b);
+				editedLevelsSelect.add(b);
+				if(i%3 == 0)
+					for(int j = 0; j < 9; j++)
+						editedLevelsSelect.add(Box.createHorizontalGlue());
+				else editedLevelsSelect.add(Box.createHorizontalGlue());
+				i++;
+			}
+		}
+		for(int j = 0; j < 83-i*2; j++)
+			editedLevelsSelect.add(Box.createHorizontalGlue());
+		JButton b = new JButton("Retour");
+		controller.setButtonAction(b);
+		editedLevelsSelect.add(b);
 	}
 
-	public void switchMenuLevel() {
+	public void switchMenuLevel(int i) {
+		if(i != 3)
+			this.idMenuShowing = i;
 		if(mainMenu.isVisible()) {
 			mainMenu.setVisible(false);
-			levelSelect.setVisible(true);
+			if(this.idMenuShowing == 1)
+				levelSelect.setVisible(true);
+			else if(i == 2)
+				editedLevelsSelect.setVisible(true);
 		}
-		else if(levelSelect.isVisible()) {
+		else if(levelSelect.isVisible()||editedLevelsSelect.isVisible()) {
 			levelSelect.setVisible(false);
+			editedLevelsSelect.setVisible(false);
 			mainMenu.setVisible(true);
 		}
 	}

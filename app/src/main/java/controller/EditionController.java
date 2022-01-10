@@ -123,7 +123,9 @@ public class EditionController {
                 for (String[] row : level.getCurrentState()) {
                     for (String s : row) {
                         stringBuilder.append(s);
-                        stringBuilder.append(" ".repeat(Math.max(0, 4 - s.length())));
+                        for (int i = 0; i < 4 - s.length(); i++) {
+                            stringBuilder.append(" ");
+                        }
                     }
                     stringBuilder.append("\n");
                 }

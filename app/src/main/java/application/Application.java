@@ -49,12 +49,6 @@ public class Application extends JFrame {
 		mainFrame.setVisible(true);
 		mainFrame.pack();
 	}
-	
-	//TODO: remove
-	private void setPanel(JPanel panel) {
-		this.mainPanel.add(panel);
-		this.pack();
-	}
 
 	public void startGame(String levelName) {
 		DrawPanelLevel panelLevel = new DrawPanelLevel(levelName, this);
