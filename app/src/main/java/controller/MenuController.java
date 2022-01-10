@@ -15,7 +15,7 @@ public class MenuController {
 	
 	public MenuController(Application app) {
 		this.app = app;
-		this.firstPlay = true;
+		this.firstPlay = false;
 	}
 	
 	public void setButtonAction(JButton b) {
@@ -25,10 +25,10 @@ public class MenuController {
 				public void actionPerformed(ActionEvent arg0) {
 					if(firstPlay) {
 						firstPlay = !firstPlay;
-						app.startGame("Level 1");
+						app.startGame("level1");
 					}
 					else {
-						menuPanel.switchMenu();
+						menuPanel.switchMenuLevel();
 					}
 				}
 			});}
@@ -36,6 +36,13 @@ public class MenuController {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					app.startGame("level"+b.getText().split(" ")[1]);
+				}
+			});
+		}
+		else if(b.getText()=="Retour") {
+			b.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					menuPanel.switchMenuLevel();
 				}
 			});
 		}
