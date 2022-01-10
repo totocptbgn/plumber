@@ -35,7 +35,7 @@ public class MenuController {
 		else if(b.getText().contains("Level")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					app.startGame(b.getText());
+					app.startGame("level"+b.getText().split(" ")[1]);
 				}
 			});
 		}

@@ -176,13 +176,14 @@ public class Level {
 			}
 		}
 		System.out.println(isCompleted());
-		for(int i = 0; i < colorState.length; i++) {
-			for(int j = 0; j < colorState[0].length; j++) {
-				if(colorState[i][j].length()>0)
-					System.out.print(colorState[i][j].charAt(0));
-				else System.out.print(" ");
-			}
-			System.out.println();
+		for (String[] row : colorState) {
+		    for (String s : row) {
+		        System.out.print("[" + s + "]");
+		        for (int i = 0; i < 8 - s.length(); i++) {
+		            System.out.print(" ");
+		        }
+		    }
+		    System.out.println();
 		}
 		System.out.println("stop");
 	}
@@ -222,7 +223,7 @@ public class Level {
 					return false;
 				}
 				else {
-					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorState[current[0]][current[1]] = colorState[current[0]][current[1]]+color;
 					return colorPipe(color, current, new Integer[]{current[0], current[1]-1});
 				}
 			}

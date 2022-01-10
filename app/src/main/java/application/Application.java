@@ -17,21 +17,19 @@ import java.io.IOException;
  *  Classe non finale : Test du mode édition.
  */
 
+@SuppressWarnings("serial")
 public class Application extends JFrame {
-
+	private JPanel mainPanel;
 	private MenuPanel menuPanel;
 	public Application() {
+		mainPanel = new JPanel();
+		this.add(mainPanel);
 		MenuController menuController = new MenuController(this);
 		this.menuPanel = new MenuPanel();
 		menuController.setMenuPanel(this.menuPanel);
 		this.menuPanel.createPanels(menuController);
-		this.setPanel(menuPanel);
+		//this.mainPanel.add(menuPanel);
 		
-	}
-	
-	public void setPanel(JPanel panel) {
-		this.setContentPane(panel);
-		this.pack();
 	}
 
 	// Main
@@ -41,7 +39,7 @@ public class Application extends JFrame {
 		mainFrame.setResizable(false);
 
 		
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level3", mainFrame);
+		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level5", mainFrame);
 		mainFrame.setPanel(panelLevel1);
 		LevelController controller1 = new LevelController(panelLevel1);
 		
@@ -49,18 +47,25 @@ public class Application extends JFrame {
 		/*DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
 		new EditionController(panelEdition);
 		mainFrame.setPanel(panelEdition);*/
-		
 		mainFrame.setVisible(true);
+	}
+	
+	//TODO: remove
+	private void setPanel(JPanel panel) {
+		this.mainPanel.add(panel);
+		this.pack();
+		
 	}
 
 	public void startGame(String levelName) {
-		//TODO: réparer
-		//DrawPanelLevel panelLevel = new DrawPanelLevel(new Level(Integer.parseInt(levelName.split(" ")[1])), this);
-		//this.setContentPane(panelLevel);
-		//LevelController controller1 = new LevelController(panelLevel);
+		/*DrawPanelLevel panelLevel = new DrawPanelLevel(levelName.split(" ")[1], this);
+		LevelController controller1 = new LevelController(panelLevel);
+		this.menuPanel.setVisible(false);
+		this.mainPanel.add(panelLevel);*/
 	}
 	
-	public void stopGame() {
-		this.setPanel(this.menuPanel);
+	public void stopGame(JPanel gamePanel) {
+		this.mainPanel.remove(gamePanel);
+		this.menuPanel.setVisible(true);
 	}
 }
