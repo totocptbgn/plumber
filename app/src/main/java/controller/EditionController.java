@@ -36,7 +36,13 @@ public class EditionController {
 
         // Back button
         buttons[0].addActionListener(e -> {
-            // TODO : Revenir au menu
+            int result = JOptionPane.showConfirmDialog(null,
+                    "Do you want to Exit ? Your level won't be saved.",
+                    "Exit Confirmation : ",
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                // TODO : Revenir au menu
+            }
         });
         buttons[0].setToolTipText("Come back to the menu.");
 
