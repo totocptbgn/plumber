@@ -74,7 +74,7 @@ public class Application extends JFrame {
 	}
 	
 	public void startEditing(String levelName) {
-		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", this);
+		DrawPanelEdition panelEdition = new DrawPanelEdition(levelName, this);
 		new EditionController(panelEdition, this);
 		this.menuPanel.setVisible(false);
 		this.mainPanel.add(panelEdition);

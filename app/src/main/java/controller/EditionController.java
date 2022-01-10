@@ -1,13 +1,11 @@
 package controller;
 
+import application.Application;
 import model.Level;
 import view.Color;
 import view.*;
 
 import javax.swing.*;
-
-import application.Application;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -338,10 +336,10 @@ public class EditionController {
                             // Si c'est la même case, alors on change la couleur de la source
                             if (xSource == xTarget && ySource == yTarget) {
                                 switch (dragSave.charAt(0)) {
-                                    case 'R': level.getCurrentState()[ySource][xSource] = "G" + dragSave.charAt(1);
-                                    case 'G': level.getCurrentState()[ySource][xSource] = "B" + dragSave.charAt(1);
-                                    case 'B': level.getCurrentState()[ySource][xSource] = "Y" + dragSave.charAt(1);
-                                    case 'Y': level.getCurrentState()[ySource][xSource] = "R" + dragSave.charAt(1);
+                                    case 'R': level.getCurrentState()[ySource][xSource] = "G" + dragSave.charAt(1); break;
+                                    case 'G': level.getCurrentState()[ySource][xSource] = "B" + dragSave.charAt(1); break;
+                                    case 'B': level.getCurrentState()[ySource][xSource] = "Y" + dragSave.charAt(1); break;
+                                    case 'Y': level.getCurrentState()[ySource][xSource] = "R" + dragSave.charAt(1); break;
                                 }
                             } else {
                                 char color = dragSave.charAt(0);

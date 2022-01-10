@@ -1,12 +1,11 @@
 package controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-
 import application.Application;
 import view.MenuPanel;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MenuController {
 	private Application app;
@@ -49,13 +48,6 @@ public class MenuController {
 						editionModeChanged = false;
 					}
 					menuPanel.switchMenuLevel(2);
-				}
-			});
-		}
-		else if(b.getText().equals("Edition de niveaux")) {
-			b.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					app.startEditing("level2");
 				}
 			});
 		}

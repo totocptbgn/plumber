@@ -1,14 +1,10 @@
 package view;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.io.File;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import controller.MenuController;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 
 public class MenuPanel extends JPanel{
 	private JPanel mainMenu, levelSelect, editedLevelsSelect;
@@ -49,13 +45,6 @@ public class MenuPanel extends JPanel{
 		JButton editedLevels = new JButton("Niveaux persos");
 		controller.setButtonAction(editedLevels);
 		mainMenu.add(editedLevels);
-		
-		for(int i = 0; i < 5; i++)
-			mainMenu.add(Box.createHorizontalGlue());
-		
-		JButton editing = new JButton("Edition de niveaux");
-		controller.setButtonAction(editing);
-		mainMenu.add(editing);
 		
 		for(int i = 0; i < 5; i++)
 			mainMenu.add(Box.createHorizontalGlue());

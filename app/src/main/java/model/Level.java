@@ -176,17 +176,6 @@ public class Level {
 				setPipeAsConnected(source);
 			}
 		}
-		/*System.out.println(isCompleted());
-		for (String[] row : colorState) {
-		    for (String s : row) {
-		        System.out.print("[" + s + "]");
-		        for (int i = 0; i < 8 - s.length(); i++) {
-		            System.out.print(" ");
-		        }
-		    }
-		    System.out.println();
-		}
-		System.out.println("stop");*/
 	}
 
 	public boolean colorPipe(String color, Integer[] previous, Integer[] current) {
@@ -273,12 +262,7 @@ public class Level {
 			}
 			// Est-ce que la couleur est déjà établi pour ce tuyau?
 			else if(!colorState[current[0]][current[1]].equals("")) {
-				if(colorState[current[0]][current[1]].equals(color))
-					return true;
-				else {
-					System.out.println(colorState[current[0]][current[1]]);
-					return false;
-				}
+				return colorState[current[0]][current[1]].equals(color);
 					
 			}
 			else {
