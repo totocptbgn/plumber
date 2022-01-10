@@ -23,7 +23,7 @@ public class Application extends JFrame {
 		mainPanel = new JPanel();
 		this.add(mainPanel);
 		MenuController menuController = new MenuController(this);
-		this.menuPanel = new MenuPanel();
+		this.menuPanel = new MenuPanel(this);
 		menuController.setMenuPanel(this.menuPanel);
 		this.menuPanel.createPanels(menuController);
 		this.mainPanel.add(menuPanel);

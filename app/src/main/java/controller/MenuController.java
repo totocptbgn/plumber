@@ -75,7 +75,6 @@ public class MenuController {
 		else if(b.getText().substring(b.getText().length()-2).equals(".p")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					b.setText(b.getText().substring(0, b.getText().length()-2));
 					if(!editionMode)
 						app.startGame(b.getText());
 					else

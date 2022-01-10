@@ -3,13 +3,18 @@ package view;
 import controller.MenuController;
 
 import javax.swing.*;
+
+import application.Application;
+
 import java.awt.*;
 import java.io.File;
 
 public class MenuPanel extends JPanel{
 	private JPanel mainMenu, levelSelect, editedLevelsSelect;
 	private int idMenuShowing;
-	public MenuPanel() {
+	private Application app;
+	public MenuPanel(Application app) {
+		this.app = app;
 		mainMenu = new JPanel();
 		levelSelect = new JPanel();
 		editedLevelsSelect = new JPanel();
@@ -100,6 +105,7 @@ public class MenuPanel extends JPanel{
 			if(file.isFile() && file.getName().substring(file.getName().length()-2).equals(".p") && !file.getName().contains("level")) {
 				JButton b = new JButton(file.getName());
 				controller.setButtonAction(b);
+				b.setText(b.getText().substring(0, b.getText().length()-2));
 				editedLevelsSelect.add(b);
 				if(i%3 == 0)
 					for(int j = 0; j < 9; j++)
@@ -135,5 +141,6 @@ public class MenuPanel extends JPanel{
 			editedLevelsSelect.setVisible(false);
 			mainMenu.setVisible(true);
 		}
+		this.app.pack();
 	}
 }
