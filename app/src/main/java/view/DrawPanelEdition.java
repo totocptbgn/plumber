@@ -340,8 +340,19 @@ public class DrawPanelEdition extends JPanel{
                         case '3' : orientation = Orientation.WEST; break;
                     }
 
-                    // TODO: Aller chercher la couleur dans Level.colorState
-                    g.drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), j * 120, i * 120, null);
+                    level.updateColor();
+                    view.Color color;
+                    switch (level.getColorState()[i][j]) {
+                        case "Red": color = view.Color.RED; break;
+                        case "Blue": color = view.Color.BLUE; break;
+                        case "Green": color = view.Color.GREEN; break;
+                        case "Yellow": color = view.Color.YELLOW; break;
+                        default: color = view.Color.WHITE; break;
+                    }
+
+                    // TODO : Gérer la coloration des OVER
+
+                    g.drawImage(Texture.getTextureTile(color, pipeType, orientation), j * 120, i * 120, null);
                 }
             }
         }

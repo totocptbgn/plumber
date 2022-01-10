@@ -102,7 +102,16 @@ public class LevelController {
                        case '3' : orientation = Orientation.WEST; break;
                    }
 
-                   dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, pipeType, orientation), 0, 0, null); // TODO: Prendre en compte la couleur
+                    view.Color color;
+                    switch (level.getColorState()[ySource][xSource]) {
+                        case "Red": color = view.Color.RED; break;
+                        case "Blue": color = view.Color.BLUE; break;
+                        case "Green": color = view.Color.GREEN; break;
+                        case "Yellow": color = view.Color.YELLOW; break;
+                        default: color = view.Color.WHITE; break;
+                    }
+
+                   dragImg.createGraphics().drawImage(Texture.getTextureTile(color, pipeType, orientation), 0, 0, null); // TODO: Prendre en compte la couleur
                    dragOffset[0] = e.getX() - (120 * xSource);
                    dragOffset[1] = e.getY() - (120 * ySource);
 
@@ -205,8 +214,6 @@ public class LevelController {
                         }
                     }
                 }
-                // TODO : vérifier
-                level.updateColor();
                 panel.repaint();
             }
 

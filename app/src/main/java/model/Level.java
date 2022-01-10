@@ -162,8 +162,8 @@ public class Level {
 				nextY = source[1];
 			}
 			else if(currentState[source[0]][source[1]].contains("3")) {
-				nextX = source[0]-1;
-				nextY = source[1];
+				nextX = source[0];
+				nextY = source[1]-1;
 			}
 			if(nextX<1||nextX>currentState.length-1 ||
 					nextY<1||nextY>currentState[0].length-1) {
@@ -222,7 +222,7 @@ public class Level {
 					return false;
 				}
 				else {
-					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorState[current[0]][current[1]] = colorState[current[0]][current[1]]+color;
 					return colorPipe(color, current, new Integer[]{current[0], current[1]-1});
 				}
 			}
@@ -536,5 +536,9 @@ public class Level {
 
 	public String[][] getCurrentState() {
 		return currentState;
+	}
+
+	public String[][] getColorState() {
+		return colorState;
 	}
 }
