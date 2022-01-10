@@ -1,12 +1,13 @@
 package application;
 
 import controller.EditionController;
+import controller.LevelController;
 import controller.MenuController;
 import view.DrawPanelEdition;
+import view.DrawPanelLevel;
 import view.MenuPanel;
 
 import javax.swing.*;
-import java.io.IOException;
 
 
 /**
@@ -30,22 +31,21 @@ public class Application extends JFrame {
 	}
 
 	// Main
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Application mainFrame = new Application();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);
-		/*
-		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level5", mainFrame);
-		mainFrame.setPanel(panelLevel1);
-		new LevelController(panelLevel1);
 
+		if (false) {
+			DrawPanelLevel panelLevel1 = new DrawPanelLevel("level5", mainFrame);
+			mainFrame.setPanel(panelLevel1);
+			new LevelController(panelLevel1);
+		} else {
+			DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
+			new EditionController(panelEdition);
+			mainFrame.setPanel(panelEdition);
+		}
 
-		 */
-
-		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
-		new EditionController(panelEdition);
-		mainFrame.setPanel(panelEdition);
-		mainFrame.setPanel(panelEdition);
 		mainFrame.setVisible(true);
 	}
 	

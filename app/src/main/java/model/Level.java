@@ -255,7 +255,7 @@ public class Level {
 					return false;
 				}
 				else {
-					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorState[current[0]][current[1]] = colorState[current[0]][current[1]]+color;
 					return colorPipe(color, current, new Integer[]{current[0], current[1]+1});
 				}
 			}
@@ -433,74 +433,50 @@ public class Level {
 			return true;
 		if(current[0] == previous[0]-1 && current[1] == previous[1]) { // le tuyau précédent est au sud
 			if(currentState[current[0]][current[1]].contains("L")) {
-				if(currentState[current[0]][current[1]].contains("1"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("1");
 			}
 			if(currentState[current[0]][current[1]].contains("T")) {
-				if(currentState[current[0]][current[1]].contains("0") ||
-						currentState[current[0]][current[1]].contains("3"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("0") &&
+						!currentState[current[0]][current[1]].contains("3");
 			}
 			if(currentState[current[0]][current[1]].contains("F")) {
-				if(currentState[current[0]][current[1]].contains("3"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("3");
 			}
 		}
 		if(current[0] == previous[0] && current[1] == previous[1]-1) { // le tuyau précédent est à l'est
 			if(currentState[current[0]][current[1]].contains("L")) {
-				if(currentState[current[0]][current[1]].contains("0"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("0");
 			}
 			if(currentState[current[0]][current[1]].contains("T")) {
-				if(currentState[current[0]][current[1]].contains("2") ||
-						currentState[current[0]][current[1]].contains("3"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("2") &&
+						!currentState[current[0]][current[1]].contains("3");
 			}
 			if(currentState[current[0]][current[1]].contains("F")) {
-				if(currentState[current[0]][current[1]].contains("2"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("2");
 			}
 		}
 		if(current[0] == previous[0]+1 && current[1] == previous[1]) { // le tuyau précédent est au nord
 			if(currentState[current[0]][current[1]].contains("L")) {
-				if(currentState[current[0]][current[1]].contains("1"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("1");
 			}
 			if(currentState[current[0]][current[1]].contains("T")) {
-				if(currentState[current[0]][current[1]].contains("1") ||
-						currentState[current[0]][current[1]].contains("2"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("1") &&
+						!currentState[current[0]][current[1]].contains("2");
 			}
 			if(currentState[current[0]][current[1]].contains("F")) {
-				if(currentState[current[0]][current[1]].contains("1"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("1");
 			}
 		}
 		if(current[0] == previous[0] && current[1] == previous[1]+1) { // le tuyau précédent est à l'ouest
 			if(currentState[current[0]][current[1]].contains("L")) {
-				if(currentState[current[0]][current[1]].contains("0"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("0");
 			}
 			if(currentState[current[0]][current[1]].contains("T")) {
-				if(currentState[current[0]][current[1]].contains("0") ||
-						currentState[current[0]][current[1]].contains("1"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("0") &&
+						!currentState[current[0]][current[1]].contains("1");
 			}
 			if(currentState[current[0]][current[1]].contains("F")) {
-				if(currentState[current[0]][current[1]].contains("0"))
-					return false;
-				else return true;
+				return !currentState[current[0]][current[1]].contains("0");
 			}
 		}
 		return false;
@@ -516,7 +492,7 @@ public class Level {
 
 	public boolean isCompleted() {
 		for(Boolean b: pipeEntriesConnected) {
-			if(!b.booleanValue())
+			if(!b)
 				return false;
 		}
 

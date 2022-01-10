@@ -311,12 +311,24 @@ public class DrawPanelLevel extends JPanel {
 					}
 					PipeType pipeType = null;
 					Orientation orientation = null;
+					view.Color color = null;
+
 
 					switch (state[i][j].charAt(chr)) {
 						case 'L' : pipeType = PipeType.LINE; break;
 						case 'O' : {
 							pipeType = PipeType.OVER;
-							g.drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), j * 120, i * 120, null);
+							String[] split = level.getColorState()[i][j].split(" ");
+							if (split.length >= 1) {
+								switch (split[0]) {
+									case "Red": color = view.Color.RED; break;
+									case "Blue": color = view.Color.BLUE; break;
+									case "Green": color = view.Color.GREEN; break;
+									case "Yellow": color = view.Color.YELLOW; break;
+									default: color = view.Color.WHITE; break;
+								}
+							}
+							g.drawImage(Texture.getTextureTile(color, PipeType.LINE), j * 120, i * 120, null);
 							break;
 						}
 						case 'T' : pipeType = PipeType.TURN; break;
@@ -331,29 +343,26 @@ public class DrawPanelLevel extends JPanel {
 						case '3' : orientation = Orientation.WEST; break;
 					}
 
-
-					view.Color color;
-					switch (level.getColorState()[i][j]) {
-						case "Red": color = view.Color.RED; break;
-						case "Blue": color = view.Color.BLUE; break;
-						case "Green": color = view.Color.GREEN; break;
-						case "Yellow": color = view.Color.YELLOW; break;
-						default: color = view.Color.WHITE; break;
-					}
-
-					// TODO : Gérer la coloration des OVER
-					// Debug print :
-					// Print the level current color state
-					for (String[] row : level.getColorState()) {
-						for (String s : row) {
-							System.out.print("[" + s + "]");
-							for (int ii = 0; ii < 8 - s.length(); ii++) {
-								System.out.print(" ");
+					if (state[i][j].charAt(chr) == 'O') {
+						String[] split = level.getColorState()[i][j].split(" ");
+						if (split.length >= 2) {
+							switch (split[1]) {
+								case "Red": color = view.Color.RED; break;
+								case "Blue": color = view.Color.BLUE; break;
+								case "Green": color = view.Color.GREEN; break;
+								case "Yellow": color = view.Color.YELLOW; break;
+								default: color = view.Color.WHITE; break;
 							}
 						}
-						System.out.println();
+					} else {
+						switch (level.getColorState()[i][j]) {
+							case "Red": color = view.Color.RED; break;
+							case "Blue": color = view.Color.BLUE; break;
+							case "Green": color = view.Color.GREEN; break;
+							case "Yellow": color = view.Color.YELLOW; break;
+							default: color = view.Color.WHITE; break;
+						}
 					}
-					System.out.println();
 
 					g.drawImage(Texture.getTextureTile(color, pipeType, orientation), j * 120, i * 120, null);
 				}

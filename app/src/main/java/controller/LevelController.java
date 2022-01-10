@@ -87,7 +87,7 @@ public class LevelController {
                        case 'L' : pipeType = PipeType.LINE; break;
                        case 'O' : {
                            pipeType = PipeType.OVER;
-                           dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), 0, 0, null); // TODO: Prendre en compte la couleur
+                           dragImg.createGraphics().drawImage(Texture.getTextureTile(view.Color.WHITE, PipeType.LINE), 0, 0, null);
                            break;
                        }
                        case 'T' : pipeType = PipeType.TURN; break;
@@ -111,7 +111,7 @@ public class LevelController {
                         default: color = view.Color.WHITE; break;
                     }
 
-                   dragImg.createGraphics().drawImage(Texture.getTextureTile(color, pipeType, orientation), 0, 0, null); // TODO: Prendre en compte la couleur
+                   dragImg.createGraphics().drawImage(Texture.getTextureTile(color, pipeType, orientation), 0, 0, null);
                    dragOffset[0] = e.getX() - (120 * xSource);
                    dragOffset[1] = e.getY() - (120 * ySource);
 

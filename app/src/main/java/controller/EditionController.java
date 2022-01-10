@@ -100,8 +100,9 @@ public class EditionController {
 
         // Save button
         buttons[2].addActionListener(e -> {
+
             // On vérifie que le niveau est complet
-            boolean win = true; // TODO : Check if the level is in a winning position
+            boolean win = level.isCompleted();
 
             // Si il l'est on construit un fichier .p pour sauvegarder le niveau
             if (win) {
@@ -109,7 +110,8 @@ public class EditionController {
                 stringBuilder.append(level.column() + 2).append(" ").append(level.line() + 2).append("\n");
                 for (String[] row : level.getCurrentState()) {
                     for (String s : row) {
-                        stringBuilder.append(s).append("  ");
+                        stringBuilder.append(s);
+                        stringBuilder.append(" ".repeat(Math.max(0, 4 - s.length())));
                     }
                     stringBuilder.append("\n");
                 }
@@ -121,7 +123,7 @@ public class EditionController {
                     try {
                         String filename = chooser.getSelectedFile().toString();
                         // On ajoute l'extension .p si l'utilisateur ne l'a pas fait
-                        if (!(filename.substring(filename.length() - 2).equals(".p"))) {
+                        if (!(filename.endsWith(".p"))) {
                             filename += ".p";
                         }
                         FileWriter fw = new FileWriter(filename);
@@ -200,7 +202,7 @@ public class EditionController {
                         case 'L' : pipeType = PipeType.LINE; break;
                         case 'O' : {
                             pipeType = PipeType.OVER;
-                            dragImg.createGraphics().drawImage(Texture.getTextureTile(Color.WHITE, PipeType.LINE), 0, 0, null); // TODO: Prendre en compte la couleur
+                            dragImg.createGraphics().drawImage(Texture.getTextureTile(Color.WHITE, PipeType.LINE), 0, 0, null);
                             break;
                         }
                         case 'T' : pipeType = PipeType.TURN; break;
@@ -218,15 +220,6 @@ public class EditionController {
                         case '1' : orientation = Orientation.EAST; break;
                         case '2' : orientation = Orientation.SOUTH; break;
                         case '3' : orientation = Orientation.WEST; break;
-                    }
-
-
-                    switch (level.getColorState()[ySource][xSource]) {
-                        case "Red": color = view.Color.RED; break;
-                        case "Blue": color = view.Color.BLUE; break;
-                        case "Green": color = view.Color.GREEN; break;
-                        case "Yellow": color = view.Color.YELLOW; break;
-                        default: color = view.Color.WHITE; break;
                     }
 
                     dragImg.createGraphics().drawImage(Texture.getTextureTile(color, pipeType, orientation), 0, 0, null);
