@@ -12,10 +12,14 @@ public class MenuController {
 	private Application app;
 	private boolean firstPlay;
 	private MenuPanel menuPanel;
+	private boolean editionMode;
+	private boolean editionModeChanged;
 	
 	public MenuController(Application app) {
 		this.app = app;
 		this.firstPlay = false;
+		this.editionMode = false;
+		this.editionModeChanged = false;
 	}
 	
 	public void setButtonAction(JButton b) {
@@ -28,6 +32,10 @@ public class MenuController {
 						app.startGame("level1");
 					}
 					else {
+						if(editionModeChanged) {
+							editionMode = true;
+							editionModeChanged = false;
+						}
 						menuPanel.switchMenuLevel(1);
 					}
 				}
@@ -36,6 +44,10 @@ public class MenuController {
 		else if(b.getText().equals("Niveaux persos")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if(editionModeChanged) {
+						editionMode = true;
+						editionModeChanged = false;
+					}
 					menuPanel.switchMenuLevel(2);
 				}
 			});
@@ -47,10 +59,24 @@ public class MenuController {
 				}
 			});
 		}
+		else if(b.getText().equals("Mode édition OFF")) {
+			b.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					editionMode = !editionMode;
+					if(editionMode)
+						b.setText("Mode édition ON");
+					else
+						b.setText("Mode édition OFF");
+				}
+			});
+		}
 		else if(b.getText().contains("Level")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					app.startGame("level"+b.getText().split(" ")[1]);
+					if(!editionMode)
+						app.startGame("level"+b.getText().split(" ")[1]);
+					else
+						app.startEditing("level"+b.getText().split(" ")[1]);
 				}
 			});
 		}
@@ -58,13 +84,21 @@ public class MenuController {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					b.setText(b.getText().substring(0, b.getText().length()-2));
-					app.startGame(b.getText());
+					if(!editionMode)
+						app.startGame(b.getText());
+					else
+						app.startEditing(b.getText());
+					
 				}
 			});
 		}
 		else if(b.getText().equals("Retour")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if(editionMode) {
+						editionMode = !editionMode;
+						editionModeChanged = true;
+					}
 					menuPanel.switchMenuLevel(3);
 				}
 			});

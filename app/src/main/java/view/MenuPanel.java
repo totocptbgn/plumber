@@ -88,7 +88,12 @@ public class MenuPanel extends JPanel{
 				i++;
 			}
 		}
-		for(int j = 0; j < 74; j++)
+		for(int j = 0; j < 70; j++)
+			levelSelect.add(Box.createHorizontalGlue());
+		JButton edit = new JButton("Mode édition OFF");
+		controller.setButtonAction(edit);
+		levelSelect.add(edit);
+		for(int j = 0; j < 3; j++)
 			levelSelect.add(Box.createHorizontalGlue());
 		JButton b = new JButton("Retour");
 		controller.setButtonAction(b);
@@ -114,11 +119,16 @@ public class MenuPanel extends JPanel{
 				i++;
 			}
 		}
-		for(int j = 0; j < 83-i*2; j++)
+		for(int j = 0; j < 79-i*2; j++)
 			editedLevelsSelect.add(Box.createHorizontalGlue());
-		JButton b = new JButton("Retour");
-		controller.setButtonAction(b);
-		editedLevelsSelect.add(b);
+		JButton edit = new JButton("Mode édition OFF");
+		controller.setButtonAction(edit);
+		editedLevelsSelect.add(edit);
+		for(int j = 0; j < 3; j++)
+			editedLevelsSelect.add(Box.createHorizontalGlue());
+		JButton retour = new JButton("Retour");
+		controller.setButtonAction(retour);
+		editedLevelsSelect.add(retour);
 	}
 
 	public void switchMenuLevel(int i) {

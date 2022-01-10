@@ -46,6 +46,7 @@ public class EditionController {
                     "Exit Confirmation : ",
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
+            	this.app.setJMenuBar(new JMenuBar());
             	this.app.stopEditing(panel);
             }
         });

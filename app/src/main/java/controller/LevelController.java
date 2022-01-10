@@ -258,6 +258,7 @@ public class LevelController {
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
             	this.app.stopGame(this.panel);
+            	this.app.setJMenuBar(new JMenuBar());
             }
         });
         buttons[0].setToolTipText("Come back to the menu.");
@@ -294,8 +295,12 @@ public class LevelController {
             		Character.getNumericValue(level.getId().charAt(level.getId().length()-1)) < 6) {
             	this.app.startNewGame(this.panel, Character.getNumericValue(level.getId().charAt(level.getId().length()-1))+1);
             }
-            else
+            else {
+            	this.app.setJMenuBar(new JMenuBar());
             	this.app.stopGame(this.panel);
+            }
+            	
+            
         }
     }
 }
