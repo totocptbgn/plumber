@@ -5,6 +5,9 @@ import view.Color;
 import view.*;
 
 import javax.swing.*;
+
+import application.Application;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -28,9 +31,13 @@ public class LevelController {
 
     private UndoManager edits;          // Undo / Redo Manager
     private JButton [] buttons;         // Undo & Redo buttons
+    
+    private DrawPanelLevel panel;
+    private Application app;
 
-    public LevelController(DrawPanelLevel panel) {
-
+    public LevelController(DrawPanelLevel panel, Application app) {
+    	this.app = app;
+    	this.panel = panel;
         this.level = panel.getLevel();
         this.dragOffset = new int[2];
         this.edits = panel.getEditManager();
@@ -250,7 +257,7 @@ public class LevelController {
                     "Exit Confirmation : ",
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                // TODO : Revenir au menu
+            	this.app.stopGame(this.panel);
             }
         });
         buttons[0].setToolTipText("Come back to the menu.");
@@ -283,7 +290,12 @@ public class LevelController {
         level.updateColor();
         if (level.isCompleted()) {
             JOptionPane.showMessageDialog(null, "You have won ! The puzzle was successfully resolved.");
-            // TODO : Quitter le niveau (aller au suivant ? ou alors juste retourner au menu)
+            if(level.getId().contains("level") &&
+            		Character.getNumericValue(level.getId().charAt(level.getId().length()-1)) < 6) {
+            	this.app.startNewGame(this.panel, Character.getNumericValue(level.getId().charAt(level.getId().length()-1))+1);
+            }
+            else
+            	this.app.stopGame(this.panel);
         }
     }
 }

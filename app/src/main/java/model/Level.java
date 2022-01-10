@@ -11,7 +11,8 @@ import java.util.Scanner;
 public class Level {
 
 	private boolean editionMode;				// Si vrai, le plateau n'est pas vidée, et la reserve reste vide.
-
+	
+	private String id;
 	private String currentState[][];			// Listes des états des tuyaux du plateau
 	private String colorState[][];				// Listes des couleurs des tuyaux du plateau
 	private int ressources[]; 					// Liste des tuyaux : C0, O0, L0, L1, T1, T2, T0, T3, F0, F1, F3, F2
@@ -20,7 +21,7 @@ public class Level {
 
 	public Level(String filename, boolean editionMode) {
 		this.editionMode = editionMode;
-
+		this.id = filename;
 		// Contruction de currentState en lisant le fichier de niveau
 		try {
 			Scanner s = new Scanner(new File("src/main/java/data/" + filename + ".p"));
@@ -517,5 +518,8 @@ public class Level {
 
 	public String[][] getColorState() {
 		return colorState;
+	}
+	public String getId() {
+		return id;
 	}
 }

@@ -5,6 +5,9 @@ import view.Color;
 import view.*;
 
 import javax.swing.*;
+
+import application.Application;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -25,9 +28,11 @@ public class EditionController {
     private String dragSave;            // Variable représentant l'objet déplacé en cas d'annulation
 
     private JButton [] buttons;         // Undo & Redo buttons
-
-    public EditionController(DrawPanelEdition panel) {
-
+    
+    private Application app;
+    
+    public EditionController(DrawPanelEdition panel, Application app) {
+    	this.app = app;
         this.level = panel.getLevel();
         this.dragOffset = new int[2];
 
@@ -41,7 +46,7 @@ public class EditionController {
                     "Exit Confirmation : ",
                     JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                // TODO : Revenir au menu
+            	this.app.stopEditing(panel);
             }
         });
         buttons[0].setToolTipText("Come back to the menu.");

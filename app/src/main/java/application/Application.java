@@ -52,7 +52,7 @@ public class Application extends JFrame {
 
 	public void startGame(String levelName) {
 		DrawPanelLevel panelLevel = new DrawPanelLevel(levelName, this);
-		LevelController controller = new LevelController(panelLevel);
+		LevelController controller = new LevelController(panelLevel, this);
 		this.menuPanel.setVisible(false);
 		this.mainPanel.add(panelLevel);
 		this.pack();
@@ -64,9 +64,18 @@ public class Application extends JFrame {
 		this.pack();
 	}
 	
+	public void startNewGame(JPanel gamePanel, int levelId) {
+		this.mainPanel.remove(gamePanel);
+		DrawPanelLevel panelLevel = new DrawPanelLevel("level"+levelId, this);
+		LevelController controller = new LevelController(panelLevel, this);
+		this.mainPanel.add(panelLevel);
+		this.pack();
+		
+	}
+	
 	public void startEditing(String levelName) {
 		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", this);
-		new EditionController(panelEdition);
+		new EditionController(panelEdition, this);
 		this.menuPanel.setVisible(false);
 		this.mainPanel.add(panelEdition);
 		this.pack();
