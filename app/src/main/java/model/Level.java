@@ -175,7 +175,7 @@ public class Level {
 				setPipeAsConnected(source);
 			}
 		}
-		System.out.println(isCompleted());
+		/*System.out.println(isCompleted());
 		for (String[] row : colorState) {
 		    for (String s : row) {
 		        System.out.print("[" + s + "]");
@@ -185,7 +185,7 @@ public class Level {
 		    }
 		    System.out.println();
 		}
-		System.out.println("stop");
+		System.out.println("stop");*/
 	}
 
 	public boolean colorPipe(String color, Integer[] previous, Integer[] current) {
@@ -255,7 +255,7 @@ public class Level {
 					return false;
 				}
 				else {
-					colorState[current[0]][current[1]] = color+colorState[current[0]][current[1]];
+					colorState[current[0]][current[1]] = colorState[current[0]][current[1]]+color;
 					return colorPipe(color, current, new Integer[]{current[0], current[1]+1});
 				}
 			}

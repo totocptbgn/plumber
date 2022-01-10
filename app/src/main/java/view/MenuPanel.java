@@ -11,17 +11,20 @@ import javax.swing.JPanel;
 import controller.MenuController;
 
 public class MenuPanel extends JPanel{
-	private JPanel mainMenu, levelSelect;
+	private JPanel mainMenu, levelSelect, editedLevelsSelect;
 	public MenuPanel() {
 		mainMenu = new JPanel();
 		levelSelect = new JPanel();
+		editedLevelsSelect = new JPanel();
 		mainMenu.setPreferredSize(new Dimension(720,512));;
 		mainMenu.setVisible(true);
 		levelSelect.setVisible(false);
+		editedLevelsSelect.setVisible(false);
 	}
 	public void createPanels(MenuController controller) {
 		createMainMenu(controller);
 		createLevelsMenu(controller);
+		createEditedLevelsMenu(controller);
 		
 		this.add(mainMenu);
 		this.add(levelSelect);
@@ -58,8 +61,8 @@ public class MenuPanel extends JPanel{
 	}
 	
 	private void createLevelsMenu(MenuController controller) {
-		levelSelect.setLayout(new GridLayout(0,11));
-		for(int j = 0; j < 12; j++)
+		levelSelect.setLayout(new GridLayout(0,7));
+		for(int j = 0; j < 8; j++)
 			levelSelect.add(Box.createHorizontalGlue());
 		File folder = new File("src/main/java/data");
 		File[] listOfFiles = folder.listFiles();
@@ -69,16 +72,21 @@ public class MenuPanel extends JPanel{
 				JButton b = new JButton("Level "+i);
 				controller.setButtonAction(b);
 				levelSelect.add(b);
-				if(i%5 == 0)
-					for(int j = 0; j < 13; j++)
+				if(i%3 == 0)
+					for(int j = 0; j < 9; j++)
 						levelSelect.add(Box.createHorizontalGlue());
 				else levelSelect.add(Box.createHorizontalGlue());
 				i++;
 			}
 		}
 	}
+	
+	private void createEditedLevelsMenu(MenuController controller) {
+		
+		
+	}
 
-	public void switchMenu() {
+	public void switchMenuLevel() {
 		if(mainMenu.isVisible()) {
 			mainMenu.setVisible(false);
 			levelSelect.setVisible(true);

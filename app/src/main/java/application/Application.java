@@ -1,8 +1,10 @@
 package application;
 
 import controller.EditionController;
+import controller.LevelController;
 import controller.MenuController;
 import view.DrawPanelEdition;
+import view.DrawPanelLevel;
 import view.MenuPanel;
 
 import javax.swing.*;
@@ -25,7 +27,7 @@ public class Application extends JFrame {
 		this.menuPanel = new MenuPanel();
 		menuController.setMenuPanel(this.menuPanel);
 		this.menuPanel.createPanels(menuController);
-		//this.mainPanel.add(menuPanel);
+		this.mainPanel.add(menuPanel);
 		
 	}
 
@@ -38,33 +40,47 @@ public class Application extends JFrame {
 		DrawPanelLevel panelLevel1 = new DrawPanelLevel("level5", mainFrame);
 		mainFrame.setPanel(panelLevel1);
 		new LevelController(panelLevel1);
-
-
 		 */
-
-		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
+		
+		/*DrawPanelEdition panelEdition = new DrawPanelEdition("level2", mainFrame);
 		new EditionController(panelEdition);
 		mainFrame.setPanel(panelEdition);
-		mainFrame.setPanel(panelEdition);
+		*/
+
 		mainFrame.setVisible(true);
+		mainFrame.pack();
 	}
 	
 	//TODO: remove
 	private void setPanel(JPanel panel) {
 		this.mainPanel.add(panel);
 		this.pack();
-		
 	}
 
 	public void startGame(String levelName) {
-		/*DrawPanelLevel panelLevel = new DrawPanelLevel(levelName.split(" ")[1], this);
-		LevelController controller1 = new LevelController(panelLevel);
+		DrawPanelLevel panelLevel = new DrawPanelLevel(levelName, this);
+		LevelController controller = new LevelController(panelLevel);
 		this.menuPanel.setVisible(false);
-		this.mainPanel.add(panelLevel);*/
+		this.mainPanel.add(panelLevel);
+		this.pack();
 	}
 	
 	public void stopGame(JPanel gamePanel) {
 		this.mainPanel.remove(gamePanel);
 		this.menuPanel.setVisible(true);
+		this.pack();
+	}
+	
+	public void startEditing(String levelName) {
+		DrawPanelEdition panelEdition = new DrawPanelEdition("level2", this);
+		new EditionController(panelEdition);
+		this.menuPanel.setVisible(false);
+		this.mainPanel.add(panelEdition);
+		this.pack();
+	}
+	public void stopEditing(JPanel editingPanel) {
+		this.mainPanel.remove(editingPanel);
+		this.menuPanel.setVisible(true);
+		this.pack();
 	}
 }
