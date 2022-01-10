@@ -28,8 +28,17 @@ public class DrawPanelEdition extends JPanel{
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
-        JButton clearBtn = new JButton("Clear");
+        JButton backBtn = new JButton("Back");
         BufferedImage buffimg = null;
+        try {
+            buffimg = ImageIO.read(new File("src/main/java/data/back.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        backBtn.setIcon(new ImageIcon(buffimg));
+        menuBar.add(backBtn);
+
+        JButton clearBtn = new JButton("Clear");
         try {
             buffimg = ImageIO.read(new File("src/main/java/data/clear.png"));
         } catch (IOException e) {
@@ -56,10 +65,11 @@ public class DrawPanelEdition extends JPanel{
         saveBtn.setIcon(new ImageIcon(buffimg));
         menuBar.add(saveBtn);
 
-        buttons = new JButton[3];
-        buttons[0] = clearBtn;
-        buttons[1] = resize;
-        buttons[2] = saveBtn;
+        buttons = new JButton[4];
+        buttons[0] = backBtn;
+        buttons[1] = clearBtn;
+        buttons[2] = resize;
+        buttons[3] = saveBtn;
     }
 
     // Change la taille de la fenêtre en fonction des changements faits au niveau (this.level)

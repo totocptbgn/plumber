@@ -34,8 +34,14 @@ public class EditionController {
         // Configuration des boutons de menu
         this.buttons = panel.getButtons();
 
-        // Clear button
+        // Back button
         buttons[0].addActionListener(e -> {
+            // TODO : Revenir au menu
+        });
+        buttons[0].setToolTipText("Come back to the menu.");
+
+        // Clear button
+        buttons[1].addActionListener(e -> {
             // On remplit le level.currentState de points
             for (String[] row : level.getCurrentState()) {
                 Arrays.fill(row, ".");
@@ -50,10 +56,10 @@ public class EditionController {
             panel.updateBackground();
             panel.repaint();
         });
-        buttons[0].setToolTipText("Remove all the tiles from the board.");
+        buttons[1].setToolTipText("Remove all the tiles from the board.");
 
         // Resize button
-        buttons[1].addActionListener(e -> {
+        buttons[2].addActionListener(e -> {
             // On créer un panel pour la dialog box
             JTextField heightField = new JTextField(5);
             JTextField widthField = new JTextField(5);
@@ -96,10 +102,10 @@ public class EditionController {
                 }
             }
         });
-        buttons[1].setToolTipText("Clear the board and resize the it.");
+        buttons[2].setToolTipText("Clear the board and resize the it.");
 
         // Save button
-        buttons[2].addActionListener(e -> {
+        buttons[3].addActionListener(e -> {
 
             // On vérifie que le niveau est complet
             boolean win = level.isCompleted();
@@ -141,7 +147,7 @@ public class EditionController {
                 );
             }
         });
-        buttons[2].setToolTipText("Save into a file the complete level.");
+        buttons[3].setToolTipText("Save into a file the complete level.");
 
         panel.addMouseListener(new MouseListener() {
 

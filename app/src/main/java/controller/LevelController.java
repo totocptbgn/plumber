@@ -153,6 +153,7 @@ public class LevelController {
                             }
                             edits.recordAction(new Action("R" + dragSave.substring(1), "P" + yTarget + xTarget));
                             checkButton();
+                            checkVictory(panel);
                             dragSave = null;
                         } else {
                             level.getRessources()[Integer.parseInt(dragSave.substring(1))]++;
@@ -187,6 +188,7 @@ public class LevelController {
                             level.getRessources()[id]++;
                             edits.recordAction(new Action("P" + ySource + xSource, "R" + id));
                             checkButton();
+                            checkVictory(panel);
                             dragSave = null;
                         }
 
@@ -200,6 +202,7 @@ public class LevelController {
                                     level.getCurrentState()[ySource][xSource] = ".";
                                     edits.recordAction(new Action("P" + ySource + xSource, "P" + yTarget + xTarget));
                                     checkButton();
+                                    checkVictory(panel);
                                     dragSave = null;
                                 } else {
                                     // Case cible remplie
@@ -240,27 +243,41 @@ public class LevelController {
         // Configuration des boutons de menu
         this.buttons = panel.getButtons();
 
-        // Undo button
+        // Back button
         buttons[0].addActionListener(e -> {
+            // TODO : Revenir au menu
+        });
+        buttons[0].setToolTipText("Come back to the menu.");
+
+        // Undo button
+        buttons[1].addActionListener(e -> {
             edits.undo();
             checkButton();
             panel.repaint();
         });
-        buttons[0].setToolTipText("Undo last action.");
+        buttons[1].setToolTipText("Undo last action.");
 
         // Redo button
-        buttons[1].addActionListener(e -> {
+        buttons[2].addActionListener(e -> {
             edits.redo();
             checkButton();
             panel.repaint();
         });
-        buttons[0].setToolTipText("Redo last action.");
+        buttons[2].setToolTipText("Redo last action.");
 
         checkButton();
     }
 
     private void checkButton() {
-        buttons[0].setEnabled(edits.canUndo());
-        buttons[1].setEnabled(edits.canRedo());
+        buttons[1].setEnabled(edits.canUndo());
+        buttons[2].setEnabled(edits.canRedo());
+    }
+
+    private void checkVictory(DrawPanelLevel panel) {
+        level.updateColor();
+        if (level.isCompleted()) {
+            JOptionPane.showMessageDialog(null, "You have won ! The puzzle was successfully resolved.");
+            // TODO : Quitter le niveau (aller au suivant ? ou alors juste retourner au menu)
+        }
     }
 }

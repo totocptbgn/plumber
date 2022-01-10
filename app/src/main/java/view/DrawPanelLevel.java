@@ -185,8 +185,17 @@ public class DrawPanelLevel extends JPanel {
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
-		JButton undoBtn = new JButton("Undo");
+		JButton backBtn = new JButton("Back");
 		BufferedImage buffimg = null;
+		try {
+			buffimg = ImageIO.read(new File("src/main/java/data/back.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		backBtn.setIcon(new ImageIcon(buffimg));
+		menuBar.add(backBtn);
+
+		JButton undoBtn = new JButton("Undo");
 		try {
 			buffimg = ImageIO.read(new File("src/main/java/data/undo.png"));
 		} catch (IOException e) {
@@ -204,9 +213,10 @@ public class DrawPanelLevel extends JPanel {
 		redoBtn.setIcon(new ImageIcon(buffimg));
 		menuBar.add(redoBtn);
 
-		buttons = new JButton[2];
-		buttons[0] = undoBtn;
-		buttons[1] = redoBtn;
+		buttons = new JButton[3];
+		buttons[0] = backBtn;
+		buttons[1] = undoBtn;
+		buttons[2] = redoBtn;
 
 		// Undo / Redo Manager
 		this.edits = new UndoManager(level);
