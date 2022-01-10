@@ -19,7 +19,7 @@ public class MenuController {
 	}
 	
 	public void setButtonAction(JButton b) {
-		if(b.getText()=="Jouer") {
+		if(b.getText().equals("Jouer")) {
 			b.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -28,10 +28,25 @@ public class MenuController {
 						app.startGame("level1");
 					}
 					else {
-						menuPanel.switchMenuLevel();
+						menuPanel.switchMenuLevel(1);
 					}
 				}
-			});}
+			});
+		}
+		else if(b.getText().equals("Niveaux persos")) {
+			b.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					menuPanel.switchMenuLevel(2);
+				}
+			});
+		}
+		else if(b.getText().equals("Edition de niveaux")) {
+			b.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					app.startEditing("level2");
+				}
+			});
+		}
 		else if(b.getText().contains("Level")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -39,10 +54,18 @@ public class MenuController {
 				}
 			});
 		}
-		else if(b.getText()=="Retour") {
+		else if(b.getText().substring(b.getText().length()-2).equals(".p")) {
 			b.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					menuPanel.switchMenuLevel();
+					b.setText(b.getText().substring(0, b.getText().length()-2));
+					app.startGame(b.getText());
+				}
+			});
+		}
+		else if(b.getText().equals("Retour")) {
+			b.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					menuPanel.switchMenuLevel(3);
 				}
 			});
 		}
